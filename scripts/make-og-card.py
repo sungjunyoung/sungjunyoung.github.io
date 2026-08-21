@@ -39,7 +39,9 @@ TEXT = "sungjunyoung"
 # Sits left of centre rather than centred, so the cursor has room to blink
 # without the whole block looking off-balance.
 X, BASELINE = 150, 262
-CURSOR_GAP, CURSOR_W, CURSOR_H = 22, 16, 96
+# The header logo's cursor is chunky relative to its text (10px on an 18px
+# font); 32px keeps that character here without reading as a plain block.
+CURSOR_GAP, CURSOR_W, CURSOR_H = 26, 32, 96
 
 
 def frame(cursor: bool) -> Image.Image:
@@ -51,7 +53,7 @@ def frame(cursor: bool) -> Image.Image:
         left = X + draw.textlength(TEXT, font=FONT) + CURSOR_GAP
         top = BASELINE + 14
         draw.rounded_rectangle(
-            (left, top, left + CURSOR_W, top + CURSOR_H), radius=2, fill=ACCENT
+            (left, top, left + CURSOR_W, top + CURSOR_H), radius=3, fill=ACCENT
         )
     return img
 

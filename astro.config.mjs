@@ -1,5 +1,6 @@
 // @ts-check
 import { readFileSync, readdirSync } from "node:fs";
+import { sep } from "node:path";
 import { defineConfig } from "astro/config";
 import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
@@ -16,7 +17,8 @@ const POSTS_DIR = new URL("./src/content/posts/", import.meta.url);
  */
 function postDates() {
   const dates = new Map();
-  for (const file of readdirSync(POSTS_DIR)) {
+  for (const entry of readdirSync(POSTS_DIR, { recursive: true })) {
+    const file = String(entry).split(sep).join("/");
     if (!file.endsWith(".md")) continue;
     const source = readFileSync(new URL(file, POSTS_DIR), "utf8");
     // Only the frontmatter block: a `date:` line in prose or inside a fenced
