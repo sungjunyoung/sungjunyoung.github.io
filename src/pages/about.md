@@ -1,7 +1,7 @@
 ---
 layout: ../layouts/Page.astro
 title: About
-date: 2021-05-16
+date: 2026-08-22
 author: Junyoung, Sung
 ---
 
@@ -26,7 +26,7 @@ author: Junyoung, Sung
 
 ## :ant: Career
 
-**2025.05 ~ / [Home:co](https://homeco.kr)** : Lead Engineer </br>
+**2025.05 ~ / [홈앤코](https://homeco.kr)** : Lead Engineer </br>
 **2022.03 ~ 2025.05 / [Viva Republica (Toss)](https://toss.im)** : DevOps Engineer </br>
 **2021.08 ~ 2022.03 / [NAVER LABS](https://www.naverlabs.com/)** : Software & DevOps Engineer </br>
 **2018.06 ~ 2021.07 / [NAVER](https://www.navercorp.com/)** : Platform & DevOps Engineer </br>
