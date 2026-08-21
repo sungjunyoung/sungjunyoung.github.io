@@ -1,17 +1,55 @@
 // @ts-check
+import { readFileSync, readdirSync } from "node:fs";
 import { defineConfig } from "astro/config";
 import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
 import { gemojiPlugin } from "./src/markdown/gemoji";
 
+const SITE_URL = "https://blog.sungjunyoung.dev";
+const POSTS_DIR = new URL("./src/content/posts/", import.meta.url);
+
+/**
+ * Publication dates, read straight from the frontmatter so the sitemap can
+ * carry `lastmod`. Astro's config runs before the content collection exists,
+ * hence the hand-rolled read rather than getCollection().
+ */
+function postDates() {
+  const dates = new Map();
+  for (const file of readdirSync(POSTS_DIR)) {
+    if (!file.endsWith(".md")) continue;
+    const source = readFileSync(new URL(file, POSTS_DIR), "utf8");
+    const match = source.match(/^date:\s*(.+)$/m);
+    if (!match) continue;
+    const date = new Date(match[1].trim());
+    if (Number.isNaN(date.getTime())) continue;
+    dates.set(`${SITE_URL}/posts/${file.replace(/\.md$/, "")}/`, date);
+  }
+  return dates;
+}
+
+const DATES = postDates();
+const NEWEST = [...DATES.values()].sort((a, b) => b.getTime() - a.getTime())[0];
+
+// /posts/ lists exactly what / lists and carries noindex, so it stays out.
+const EXCLUDED = new Set([`${SITE_URL}/posts/`]);
+
 // https://astro.build/config
 export default defineConfig({
-  site: "https://blog.sungjunyoung.dev",
+  site: SITE_URL,
   trailingSlash: "always",
   build: {
     format: "directory",
   },
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) => !EXCLUDED.has(page),
+      serialize(item) {
+        const lastmod = DATES.get(item.url) ?? (item.url === `${SITE_URL}/` ? NEWEST : undefined);
+        if (lastmod) item.lastmod = lastmod.toISOString();
+        return item;
+      },
+    }),
+  ],
   markdown: {
     // hello-friend shipped a Prism "tomorrow night eighties" stylesheet, so
     // keeping Prism lets src/styles/prism.css apply verbatim.

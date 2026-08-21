@@ -2,6 +2,7 @@
 title: "Goroutine 은 어떻게 동작할까?"
 date: 2021-05-17T00:45:48+09:00
 draft: false
+description: "goroutine 이 커널 스레드와 무엇이 다른지, Go 런타임 스케줄러가 스레드 재활용·개수 제한·분산 runqueue 라는 세 가지 아이디어로 이를 어떻게 처리하는지 정리했습니다."
 tags: [golang]
 ---
 
@@ -63,14 +64,14 @@ func f() {
 스레드 생성 및 삭제에는 System Call 이 수행되어야 하지만, `goroutine` 은 System Call 없이 유저 스페이스에서 동작을 완료할 수 있기 때문입니다.
 
 <figure class="left">
-  <img src="/assets/posts/how-goroutine-works/goroutine-external-structure.png" />
+  <img src="/assets/posts/how-goroutine-works/goroutine-external-structure.png" alt="커널 스레드 위에서 실행되는 Goroutine" width="406" height="252" loading="lazy" decoding="async" />
   <figcaption class="center">[그림-1] 커널 스레드 위에서 실행되는 Goroutine</figcaption>
 </figure>
 
 이렇게 가벼운 `goroutine` 은 스레드 위에서 스케줄링되어 동작하게 됩니다.
 
 <figure class="left">
-  <img src="/assets/posts/how-goroutine-works/goroutine-binding.png" />
+  <img src="/assets/posts/how-goroutine-works/goroutine-binding.png" alt="Goroutine 의 실행구조" width="375" height="462" loading="lazy" decoding="async" />
   <figcaption class="center">[그림-2] Goroutine 의 실행구조</figcaption>
 </figure>
 
@@ -141,7 +142,7 @@ goroutine g1 이 실행되고, 종료 후 g2 가 실행되는 과정
 4. 새로운 goroutine `g2` 가 생성되고, idle 상태의 스레드 `T1` 을 재활용하여 실행
 
 <figure class="left">
-  <img src="/assets/posts/how-goroutine-works/reuse-thread.gif" />
+  <img src="/assets/posts/how-goroutine-works/reuse-thread.gif" alt="커널 스레드 재활용" width="810" height="356" loading="lazy" decoding="async" />
   <figcaption class="center">[그림-3] 커널 스레드 재활용</figcaption>
 </figure>
 
@@ -167,7 +168,7 @@ Go 에서는 이 조건을 CPU 코어의 갯수로 제한합니다.
 이 설정은 하나의 노드에서 여러 Go 프로그램을 실행시킬 때 좀 더 좋은 성능을 위해 조절하기도 합니다.
 
 <figure class="left">
-  <img src="/assets/posts/how-goroutine-works/limit-thread.png" />
+  <img src="/assets/posts/how-goroutine-works/limit-thread.png" alt="커널 스레드 갯수 제한 (CPU 코어 = 2)" width="1622" height="360" loading="lazy" decoding="async" />
   <figcaption class="center">[그림-4] 커널 스레드 갯수 제한 (CPU 코어 = 2)</figcaption>
 </figure>
 
@@ -201,7 +202,7 @@ runqueue 는 Heap 영역에 있는 공동의 리소스이고,
 3. T1 이 g1 을 실행하려 하지만, runq B 에는 goroutine 이 없는 상태
 
 <figure class="left">
-  <img src="/assets/posts/how-goroutine-works/local-runqueue-1.gif" />
+  <img src="/assets/posts/how-goroutine-works/local-runqueue-1.gif" alt="스레드별 local runqueue 상황에서의 스케줄링" width="808" height="352" loading="lazy" decoding="async" />
   <figcaption class="center">[그림-5] 스레드별 local runqueue 상황에서의 스케줄링</figcaption>
 </figure>
 
@@ -231,7 +232,7 @@ func stealWork(now int64) (gp *g, inheritTime bool, rnow, pollUntil int64, newWo
 위 코드에서 work stealing 을 확인할 수 있습니다.
 
 <figure class="left">
-  <img src="/assets/posts/how-goroutine-works/local-runqueue-2.gif" />
+  <img src="/assets/posts/how-goroutine-works/local-runqueue-2.gif" alt="Work Stealing" width="810" height="366" loading="lazy" decoding="async" />
   <figcaption class="center">[그림-6] Work Stealing</figcaption>
 </figure>
 
@@ -277,7 +278,7 @@ Runtime Scheduler 는 Background 모니터 스레드를 통해 일정 시간 블
 이렇게 새로 만들어진 스레드의 runqueue 에, 기존에 쌓여있던 goroutine 작업들을 `handoff` 해줍니다.
 
 <figure class="left">
-  <img src="/assets/posts/how-goroutine-works/runqueue-handoff.png" />
+  <img src="/assets/posts/how-goroutine-works/runqueue-handoff.png" alt="Runqueue Handoff" width="1887" height="495" loading="lazy" decoding="async" />
   <figcaption class="center">[그림-7] Runqueue Handoff</figcaption>
 </figure>
 

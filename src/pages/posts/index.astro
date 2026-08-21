@@ -7,7 +7,9 @@ import { excerpt } from '../../utils/excerpt';
 const posts = await getPosts();
 ---
 
-<Base title="Posts">
+{/* This page lists exactly what "/" lists, so it is kept out of the
+    index to avoid competing with the home page for the same content. */}
+<Base title="Posts" noindex>
   <div class="posts">
     {posts.map((post) => (
       <PostCard

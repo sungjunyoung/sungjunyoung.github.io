@@ -1,26 +1,83 @@
 ---
-import { SITE } from '../consts';
+import { SITE } from "../consts";
+import { metaDescription } from "../utils/excerpt";
 
 interface Props {
+  /** Full <title> text, already suffixed with the site name where appropriate. */
   title: string;
+  /** Bare page/post title, used for social cards where og:site_name carries the suffix. */
+  socialTitle?: string;
   description?: string;
-  /** OpenGraph type — "article" for posts, "website" otherwise. */
-  type?: 'website' | 'article';
+  type?: "website" | "article";
   publishedAt?: Date;
   tags?: readonly string[];
+  /** Post-specific social image (absolute path under /public); falls back to the site card. */
+  image?: string;
+  /** Set on pages that duplicate another URL's content. */
+  noindex?: boolean;
 }
 
-const { title, description = '', type = 'website', publishedAt, tags = [] } = Astro.props;
+const {
+  title,
+  socialTitle,
+  description,
+  type = "website",
+  publishedAt,
+  tags = [],
+  image,
+  noindex = false,
+} = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/assets/img/profile.jpg', Astro.site).href;
+const ogImage = new URL(image ?? SITE.ogImage, Astro.site).href;
+const cardTitle = socialTitle ?? title;
+// `|| ` rather than `??` so an empty string also falls back — the home page
+// used to ship `<meta name="description" content>` because of this.
+const summary = metaDescription(description || SITE.description);
+
+// Google reads publisher/author from structured data; without it a personal blog
+// shows up as a bare link. Articles describe themselves, everything else
+// describes the site.
+const person = {
+  "@type": "Person",
+  name: SITE.author,
+  url: SITE.url,
+  sameAs: [SITE.github, SITE.linkedin],
+};
+
+const jsonLd =
+  type === "article"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: cardTitle,
+        description: summary,
+        image: ogImage,
+        url: canonical,
+        mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
+        datePublished: publishedAt?.toISOString(),
+        dateModified: publishedAt?.toISOString(),
+        inLanguage: SITE.lang,
+        keywords: tags.join(", ") || undefined,
+        author: person,
+        publisher: person,
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: SITE.title,
+        description: SITE.description,
+        url: SITE.url,
+        inLanguage: SITE.lang,
+        author: person,
+      };
 ---
 
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content={description} />
-<meta name="keywords" content={tags.join(', ')} />
-<meta name="robots" content="noodp" />
+<meta name="description" content={summary} />
+<meta name="author" content={SITE.author} />
+{noindex && <meta name="robots" content="noindex, follow" />}
 <link rel="canonical" href={canonical} />
 
 <!-- AdSense (was layouts/partials/prepended_head.html) -->
@@ -34,7 +91,11 @@ const ogImage = new URL('/assets/img/profile.jpg', Astro.site).href;
 <title>{title}</title>
 
 <!-- Icons -->
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png" />
+<link
+  rel="apple-touch-icon-precomposed"
+  sizes="144x144"
+  href="/img/apple-touch-icon-144-precomposed.png"
+/>
 <link rel="shortcut icon" href="/img/favicon.png" />
 
 <!-- Fonts -->
@@ -44,31 +105,42 @@ const ogImage = new URL('/assets/img/profile.jpg', Astro.site).href;
 
 <!-- OpenGraph -->
 <meta property="og:site_name" content={SITE.title} />
-<meta property="og:title" content={title} />
+<meta property="og:title" content={cardTitle} />
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonical} />
+<meta property="og:description" content={summary} />
+<meta property="og:locale" content={SITE.locale} />
 <meta property="og:image" content={ogImage} />
-{description && <meta property="og:description" content={description} />}
+<meta property="og:image:width" content={String(SITE.ogImageWidth)} />
+<meta property="og:image:height" content={String(SITE.ogImageHeight)} />
+<meta property="og:image:alt" content={cardTitle} />
 {publishedAt && <meta property="article:published_time" content={publishedAt.toISOString()} />}
+{type === "article" && <meta property="article:author" content={SITE.author} />}
 {tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={title} />
+<meta name="twitter:title" content={cardTitle} />
+<meta name="twitter:description" content={summary} />
 <meta name="twitter:image" content={ogImage} />
-{description && <meta name="twitter:description" content={description} />}
+<meta name="twitter:image:alt" content={cardTitle} />
 
-<!-- RSS -->
+<!-- RSS | sitemap -->
 <link rel="alternate" type="application/rss+xml" href="/index.xml" title={SITE.title} />
 <link rel="sitemap" href="/sitemap-index.xml" />
 
+<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+
 <!-- Google Analytics -->
-<script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${SITE.googleAnalyticsId}`}></script>
+<script
+  is:inline
+  async
+  src={`https://www.googletagmanager.com/gtag/js?id=${SITE.googleAnalyticsId}`}></script>
 <script is:inline define:vars={{ gaId: SITE.googleAnalyticsId }}>
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     dataLayer.push(arguments);
   }
-  gtag('js', new Date());
-  gtag('config', gaId);
+  gtag("js", new Date());
+  gtag("config", gaId);
 </script>

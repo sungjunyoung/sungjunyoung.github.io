@@ -11,6 +11,8 @@ const posts = defineCollection({
     tags: z.array(z.string()).default([]),
     description: z.string().optional(),
     toc: z.boolean().default(true),
+    /** Optional 1200x630 social card for this post. */
+    cover: z.string().optional(),
   }),
 });
 

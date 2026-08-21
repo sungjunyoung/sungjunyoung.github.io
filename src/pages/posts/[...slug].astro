@@ -39,6 +39,7 @@ const description = post.data.description ?? excerpt(post.body ?? '');
   type="article"
   publishedAt={post.data.date}
   tags={post.data.tags}
+  image={post.data.cover}
 >
   <div class="post-layout">
     <article class="post">

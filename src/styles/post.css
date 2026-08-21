@@ -260,3 +260,12 @@
 .comments {
   margin-top: 40px;
 }
+
+/* The previous profile picture was a circular PNG cut-out; the replacement is a
+   plain photograph, so the circle is applied here instead of baked into the file. */
+.profile-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}

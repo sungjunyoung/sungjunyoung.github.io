@@ -11,9 +11,11 @@ interface Props {
   type?: 'website' | 'article';
   publishedAt?: Date;
   tags?: readonly string[];
+  image?: string;
+  noindex?: boolean;
 }
 
-const { title, description, type, publishedAt, tags } = Astro.props;
+const { title, description, type, publishedAt, tags, image, noindex } = Astro.props;
 
 // Hugo's baseof.html: "<Title> :: <Site.Title>" for inner pages, bare site title at home.
 const isHome = Astro.url.pathname === '/';
@@ -25,10 +27,13 @@ const pageTitle = isHome ? SITE.title : `${title} :: ${SITE.title}`;
   <head>
     <BaseHead
       title={pageTitle}
+      socialTitle={isHome ? SITE.title : title}
       description={description}
       type={type}
       publishedAt={publishedAt}
       tags={tags}
+      image={image}
+      noindex={noindex}
     />
     <script is:inline>
       // Apply the stored theme before first paint so the page never flashes.

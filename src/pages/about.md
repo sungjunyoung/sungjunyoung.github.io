@@ -5,7 +5,7 @@ date: 2021-05-16
 author: Junyoung, Sung
 ---
 
-![Profile](/assets/img/profile.jpg)
+<img class="profile-photo" src="/assets/img/profile.jpg" alt="Junyoung, Sung" width="200" height="200" />
 
 :heart: Golang / Kubernetes
 

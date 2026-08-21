@@ -2,6 +2,7 @@
 title: "Kubernetes 의 Ephemeral Storage 리소스 이해하기"
 date: 2021-06-29T19:30:48+09:00
 draft: false
+description: "Kubernetes 의 ephemeral-storage 리소스가 정확히 무엇을 계산하는지, kubelet 이 사용량을 어떻게 측정하고 어떤 조건에서 Pod 을 Evict 하는지 직접 테스트하며 살펴봅니다."
 tags: [kubernetes]
 ---
 

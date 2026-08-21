@@ -10,7 +10,7 @@ const page = posts.slice(0, SITE.postsPerPage);
 const hasNext = posts.length > SITE.postsPerPage;
 ---
 
-<Base title={SITE.title} description={SITE.subtitle}>
+<Base title={SITE.title}>
   <div class="posts">
     {page.map((post) => (
       <PostCard
