@@ -40,8 +40,13 @@ TEXT = "sungjunyoung"
 # Sits left of centre rather than centred, so the cursor has room to blink
 # without the whole block looking off-balance.
 X, TEXT_TOP = 150, 262
-# .logo__cursor is an inline-block, so it rests on the text baseline.
-BASELINE = TEXT_TOP + FONT.getmetrics()[0]
+
+# .logo is `display: flex; align-items: center`, so the cursor is a flex item
+# centred against the text — not sitting on its baseline. Centring it on the
+# font's content box reproduces that: the top lands near the cap height and the
+# bottom falls just below the baseline, exactly as the header renders.
+ASCENT, DESCENT = FONT.getmetrics()
+CURSOR_CENTER = TEXT_TOP + (ASCENT + DESCENT) / 2
 # The cursor is the header logo's, scaled. src/styles/logo.css sizes it in
 # pixels against an 18px .logo__text, so the ratios are taken from there rather
 # than eyeballed — change the CSS and these follow.
@@ -59,8 +64,9 @@ def frame(cursor: bool) -> Image.Image:
 
     if cursor:
         left = X + draw.textlength(TEXT, font=FONT) + CURSOR_GAP
+        top = CURSOR_CENTER - CURSOR_H / 2
         draw.rounded_rectangle(
-            (left, BASELINE - CURSOR_H, left + CURSOR_W, BASELINE),
+            (left, top, left + CURSOR_W, top + CURSOR_H),
             radius=CURSOR_RADIUS,
             fill=ACCENT,
         )
