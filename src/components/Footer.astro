@@ -1,0 +1,21 @@
+---
+import Logo from './Logo.astro';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="footer__inner">
+    <Logo />
+    <div class="copyright">
+      <span>© {year} Powered by <a href="https://astro.build" target="_blank" rel="noopener">Astro</a></span>
+      <span>
+        Design based on <a
+          href="https://github.com/panr/hugo-theme-hello-friend"
+          target="_blank"
+          rel="noopener">hello-friend</a
+        > by <a href="https://github.com/panr" target="_blank" rel="noopener">panr</a>
+      </span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,68 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE } from '../consts';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  type?: 'website' | 'article';
+  publishedAt?: Date;
+  tags?: readonly string[];
+}
+
+const { title, description, type, publishedAt, tags } = Astro.props;
+
+// Hugo's baseof.html: "<Title> :: <Site.Title>" for inner pages, bare site title at home.
+const isHome = Astro.url.pathname === '/';
+const pageTitle = isHome ? SITE.title : `${title} :: ${SITE.title}`;
+---
+
+<!doctype html>
+<html lang={SITE.lang}>
+  <head>
+    <BaseHead
+      title={pageTitle}
+      description={description}
+      type={type}
+      publishedAt={publishedAt}
+      tags={tags}
+    />
+    <script is:inline>
+      // Apply the stored theme before first paint so the page never flashes.
+      (function () {
+        try {
+          var stored = window.localStorage.getItem('theme');
+          document.documentElement.dataset.initialTheme =
+            stored === 'light-theme' || stored === 'dark-theme' ? stored : 'dark-theme';
+        } catch (e) {
+          document.documentElement.dataset.initialTheme = 'dark-theme';
+        }
+      })();
+    </script>
+  </head>
+  <body class="dark-theme">
+    <script is:inline>
+      document.body.className = document.documentElement.dataset.initialTheme;
+    </script>
+    <div class="container">
+      <Header />
+
+      <div class="content">
+        <slot />
+      </div>
+
+      <Footer />
+    </div>
+
+    <script>
+      import '../scripts/theme';
+      import '../scripts/menu';
+      import '../scripts/code-copy';
+      import '../scripts/toc';
+      import '../scripts/comments';
+    </script>
+  </body>
+</html>

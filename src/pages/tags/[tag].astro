@@ -1,0 +1,44 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts, postUrl, type Post } from '../../utils/posts';
+import { excerpt } from '../../utils/excerpt';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getPosts();
+  const byTag = new Map<string, Post[]>();
+
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      byTag.set(tag, [...(byTag.get(tag) ?? []), post]);
+    }
+  }
+
+  return [...byTag.entries()].map(([tag, tagged]) => ({
+    params: { tag },
+    props: { tag, posts: tagged },
+  }));
+};
+
+interface Props {
+  tag: string;
+  posts: Post[];
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<Base title={tag}>
+  <div class="posts">
+    {posts.map((post) => (
+      <PostCard
+        href={postUrl(post)}
+        title={post.data.title}
+        date={post.data.date}
+        tags={post.data.tags}
+        summary={post.data.description ?? excerpt(post.body ?? '')}
+      />
+    ))}
+  </div>
+</Base>

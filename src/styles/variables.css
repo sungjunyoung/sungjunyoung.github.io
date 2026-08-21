@@ -1,0 +1,46 @@
+body.light-theme,
+:root {
+  /* light theme color */
+  --background: #fff;
+  --background-secondary: #eaeaea;
+  --header: #fafafa;
+  --color: #222;
+  --color-secondary: #999;
+  --border-color: #dcdcdc;
+
+  /* variables for js, must be the same as these in the media queries below */
+  --phoneWidth: (max-width: 684px);
+  --tabletWidth: (max-width: 900px);
+}
+
+body.dark-theme {
+  /* dark theme colors */
+  --background: #292a2d;
+  --background-secondary: #3b3d42;
+  --header: #252627;
+  --color: #a9a9b3;
+  --color-secondary: #73747b;
+  --border-color: #4a4b50;
+}
+
+@media (prefers-color-scheme: light) {
+  body:not(.dark-theme) {
+    --background: #fff;
+    --background-secondary: #eaeaea;
+    --header: #fafafa;
+    --color: #222;
+    --color-secondary: #999;
+    --border-color: #dcdcdc;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light-theme) {
+    --background: #292a2d;
+    --background-secondary: #3b3d42;
+    --header: #252627;
+    --color: #a9a9b3;
+    --color-secondary: #73747b;
+    --border-color: #4a4b50;
+  }
+}

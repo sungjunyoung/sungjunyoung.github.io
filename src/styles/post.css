@@ -1,0 +1,262 @@
+.post {
+  width: 100%;
+  max-width: 800px;
+  text-align: left;
+  padding: 20px;
+  margin: 20px auto;
+}
+
+@media (max-width: 900px) {
+  .post {
+    max-width: 660px;
+  }
+}
+
+.post:not(:last-of-type) {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.post-meta {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 684px) {
+  .post-meta {
+    font-size: 0.85rem;
+  }
+}
+
+.post-title {
+  font-size: 2.625rem;
+  margin: 0 0 20px;
+}
+
+@media (max-width: 684px) {
+  .post-title {
+    font-size: 2rem;
+  }
+}
+
+.post-title a {
+  text-decoration: none;
+}
+
+.post-tags {
+  display: block;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  opacity: 0.5;
+}
+
+.post-tags a {
+  text-decoration: none;
+}
+
+.post-content {
+  margin-top: 30px;
+}
+
+.post-cover {
+  margin: 40px -50px;
+  width: 860px;
+  max-width: 860px;
+}
+
+.post-cover img {
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 900px) {
+  .post-cover {
+    margin: 20px 0;
+    width: 100%;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Post + table of contents layout
+
+   The two outer grid tracks are always the same size, so the 800px article
+   stays centred on the viewport and its 760px text column keeps lining up with
+   the 760px header and footer — on every page, with or without a TOC.
+
+   Capping those tracks at 320px stops the rail from drifting toward the screen
+   edge on wide monitors: past 1440px the whole grid centres instead of the
+   tracks growing. Within its track the rail is centred too, so it reads as a
+   margin note with air on both sides rather than something falling off the
+   right edge.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --content-width: 800px;
+  --gutter-max: 320px;
+  --toc-width: 220px;
+}
+
+.post-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 1360px) {
+  .post-layout {
+    display: grid;
+    grid-template-columns:
+      minmax(0, var(--gutter-max))
+      var(--content-width)
+      minmax(0, var(--gutter-max));
+    justify-content: center;
+    align-items: start;
+  }
+
+  .post-layout .post {
+    grid-column: 2;
+  }
+}
+
+/* --- the rail itself ------------------------------------------------------ */
+
+.table-of-contents {
+  order: -1;
+  width: 100%;
+  max-width: var(--content-width);
+  /* Matches the article's own 20px side padding and 20px top margin so the
+     rail never sits flush against the header on a phone. */
+  padding: 0 20px;
+  margin: 20px 0 10px;
+}
+
+@media (min-width: 900px) and (max-width: 1359px) {
+  .table-of-contents {
+    max-width: 660px;
+  }
+}
+
+@media (min-width: 1360px) {
+  .table-of-contents {
+    order: 0;
+    grid-column: 3;
+    justify-self: center;
+    position: sticky;
+    /* 10px lower than the article so the small caps label sits optically level
+       with the cap height of the 2.625rem post title. */
+    top: 40px;
+    width: min(var(--toc-width), 100%);
+    max-width: none;
+    padding: 0;
+    margin: 30px 0 0;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+}
+
+/* --- disclosure ----------------------------------------------------------- */
+
+.table-of-contents__toggle {
+  position: absolute;
+  visibility: hidden;
+}
+
+.table-of-contents__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.table-of-contents__caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+  transition: transform 0.15s ease;
+}
+
+/* Collapsed by default: on a phone the list would otherwise push the post
+   title several hundred pixels down the page. */
+.table-of-contents__toggle:not(:checked) ~ #TableOfContents {
+  display: none;
+}
+
+.table-of-contents__toggle:checked
+  ~ .table-of-contents__title
+  .table-of-contents__caret {
+  transform: rotate(180deg);
+}
+
+@media (min-width: 1360px) {
+  /* The rail has room to stay open, so the label goes back to being a label.
+     Selector must mirror the collapsed rule above — `:not(:checked)` carries
+     extra specificity that a plainer selector here would lose to. */
+  .table-of-contents__toggle:not(:checked) ~ #TableOfContents {
+    display: block;
+  }
+
+  .table-of-contents__title {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .table-of-contents__caret {
+    display: none;
+  }
+}
+
+/* --- entries -------------------------------------------------------------- */
+
+.table-of-contents ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.table-of-contents li {
+  margin: 0;
+}
+
+.table-of-contents a {
+  display: block;
+  padding: 6px 0 6px 14px;
+  border-left: 2px solid var(--border-color);
+  color: var(--color-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.table-of-contents a:hover {
+  color: var(--color);
+}
+
+/* The reading position is shown by the border, not a bullet or a marker. */
+.table-of-contents a.active {
+  color: var(--color);
+  border-left-color: #fe5186;
+}
+
+.table-of-contents ul ul a {
+  padding-left: 28px;
+  font-size: 0.8rem;
+}
+
+/* Sits inside .post, so it inherits the article's width and padding. */
+.comments {
+  margin-top: 40px;
+}

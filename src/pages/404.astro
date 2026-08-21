@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import { getPosts, tagCounts } from '../utils/posts';
+
+const terms = tagCounts(await getPosts());
+---
+
+<Base title="404 Page not found">
+  <div class="post">
+    <h1 class="post-title">404 Page not found</h1>
+    <div class="post-content">
+      <p>Hmm... Sorry, this page seems to be missing.</p>
+
+      {terms.length > 0 && (
+        <>
+          <p>Maybe these tags will help you find what you're looking for.</p>
+          <h2>Tags</h2>
+          <div class="terms">
+            <ul class="terms__list">
+              {terms.map(([tag, count]) => (
+                <li class="terms__term">
+                  <a href={`/tags/${tag}/`}>#{tag}</a><span class="terms__term-count">{count}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+    </div>
+  </div>
+</Base>

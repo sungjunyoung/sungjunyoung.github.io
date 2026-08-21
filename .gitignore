@@ -1,4 +1,10 @@
 .DS_Store
-public/
-.hugo_build.lock
 .idea/
+
+# nix / direnv
+.direnv/
+
+# node / astro
+node_modules/
+dist/
+.astro/

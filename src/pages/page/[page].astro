@@ -1,0 +1,71 @@
+---
+import type { GetStaticPaths } from 'astro';
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts, postUrl, type Post } from '../../utils/posts';
+import { excerpt } from '../../utils/excerpt';
+import { SITE, LABELS } from '../../consts';
+
+// Hugo served page 1 at "/" and only emitted /page/2/ onwards, so the loop
+// starts at 2 to keep every existing URL valid.
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getPosts();
+  const totalPages = Math.ceil(posts.length / SITE.postsPerPage);
+
+  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, i) => {
+    const currentPage = i + 2;
+    const start = (currentPage - 1) * SITE.postsPerPage;
+    return {
+      params: { page: String(currentPage) },
+      props: {
+        posts: posts.slice(start, start + SITE.postsPerPage),
+        currentPage,
+        totalPages,
+      },
+    };
+  });
+};
+
+interface Props {
+  posts: Post[];
+  currentPage: number;
+  totalPages: number;
+}
+
+const { posts, currentPage, totalPages } = Astro.props;
+const prevUrl = currentPage === 2 ? '/' : `/page/${currentPage - 1}/`;
+const nextUrl = currentPage < totalPages ? `/page/${currentPage + 1}/` : null;
+---
+
+<Base title={`Posts — page ${currentPage}`}>
+  <div class="posts">
+    {posts.map((post) => (
+      <PostCard
+        href={postUrl(post)}
+        title={post.data.title}
+        date={post.data.date}
+        tags={post.data.tags}
+        summary={post.data.description ?? excerpt(post.body ?? '')}
+      />
+    ))}
+
+    <div class="pagination">
+      <div class="pagination__buttons">
+        <span class="button previous">
+          <a href={prevUrl}>
+            <span class="button__icon">←</span>
+            <span class="button__text">{LABELS.newerPosts}</span>
+          </a>
+        </span>
+        {nextUrl && (
+          <span class="button next">
+            <a href={nextUrl}>
+              <span class="button__text">{LABELS.olderPosts}</span>
+              <span class="button__icon">→</span>
+            </a>
+          </span>
+        )}
+      </div>
+    </div>
+  </div>
+</Base>

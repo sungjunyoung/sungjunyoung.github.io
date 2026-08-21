@@ -1,0 +1,56 @@
+.header {
+  background: var(--header);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 20px;
+}
+
+.header__right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+@media (max-width: 684px) {
+  .header__right {
+    flex-direction: row-reverse;
+  }
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+  width: 760px;
+  max-width: 100%;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  cursor: pointer;
+  /* reset the global `button` rule from buttons.css */
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+  color: inherit;
+}
+
+.theme-toggler {
+  fill: currentColor;
+}
+
+/* .post narrows to 660px (620px of text) below 900px; without this the header
+   kept its 760px band and drifted out of line with the article. */
+@media (max-width: 900px) {
+  .header__inner {
+    width: 620px;
+  }
+}

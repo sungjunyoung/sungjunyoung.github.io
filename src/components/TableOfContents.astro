@@ -1,0 +1,51 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+// Hugo's default TOC covered h2–h3.
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+
+type Node = MarkdownHeading & { children: MarkdownHeading[] };
+
+const tree: Node[] = [];
+for (const heading of items) {
+  if (heading.depth === 2 || tree.length === 0) {
+    tree.push({ ...heading, children: [] });
+  } else {
+    tree[tree.length - 1]!.children.push(heading);
+  }
+}
+---
+
+{items.length > 0 && (
+  <aside class="table-of-contents">
+    {/* Checkbox disclosure rather than <details>, so CSS alone can keep the
+        list collapsed on phones and permanently open on the desktop rail —
+        no JS, and no flash of the wrong state on first paint. */}
+    <input type="checkbox" id="toc-toggle" class="table-of-contents__toggle" />
+    <label class="table-of-contents__title" for="toc-toggle">
+      Table of Contents
+      <span class="table-of-contents__caret" aria-hidden="true"></span>
+    </label>
+    <nav id="TableOfContents">
+      <ul>
+        {tree.map((node) => (
+          <li>
+            <a href={`#${node.slug}`}>{node.text}</a>
+            {node.children.length > 0 && (
+              <ul>
+                {node.children.map((child) => (
+                  <li><a href={`#${child.slug}`}>{child.text}</a></li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </aside>
+)}

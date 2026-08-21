@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPosts, tagCounts } from '../../utils/posts';
+
+const terms = tagCounts(await getPosts());
+---
+
+<Base title="Tags">
+  <div class="terms">
+    <h1>Tags</h1>
+    <ul class="terms__list">
+      {terms.map(([tag, count]) => (
+        <li class="terms__term">
+          <a href={`/tags/${tag}/`}>#{tag} <span class="terms__term-count">{count}</span></a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Base>

@@ -1,0 +1,32 @@
+---
+import { formatDate, LABELS } from '../consts';
+
+interface Props {
+  href: string;
+  title: string;
+  date: Date;
+  tags: readonly string[];
+  summary: string;
+}
+
+const { href, title, date, tags, summary } = Astro.props;
+---
+
+<article class="post on-list">
+  <h1 class="post-title"><a href={href}>{title}</a></h1>
+  <div class="post-meta">
+    <time class="post-date" datetime={date.toISOString()}>{formatDate(date)}</time>
+  </div>
+
+  {tags.length > 0 && (
+    <span class="post-tags">
+      {tags.map((tag) => (
+        <Fragment><a href={`/tags/${tag}/`}>#{tag}</a>&nbsp;</Fragment>
+      ))}
+    </span>
+  )}
+
+  <div class="post-content">{summary}</div>
+
+  <div><a class="read-more button" href={href}>{LABELS.readMore} →</a></div>
+</article>

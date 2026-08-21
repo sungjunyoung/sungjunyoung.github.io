@@ -1,0 +1,32 @@
+---
+import Base from './Base.astro';
+import { formatDate } from '../consts';
+
+interface Props {
+  frontmatter: {
+    title: string;
+    date?: string;
+    author?: string;
+    description?: string;
+  };
+}
+
+const { frontmatter } = Astro.props;
+const date = frontmatter.date ? new Date(frontmatter.date) : null;
+---
+
+<Base title={frontmatter.title} description={frontmatter.description}>
+  <article class="post">
+    <h1 class="post-title">{frontmatter.title}</h1>
+    <div class="post-meta">
+      {date && <time class="post-date" datetime={date.toISOString()}>{formatDate(date)}</time>}
+      {frontmatter.author && (
+        <span class="post-author">— Written by {frontmatter.author}</span>
+      )}
+    </div>
+
+    <div class="post-content">
+      <slot />
+    </div>
+  </article>
+</Base>

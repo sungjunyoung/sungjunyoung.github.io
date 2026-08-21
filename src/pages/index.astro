@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import { getPosts, postUrl } from '../utils/posts';
+import { excerpt } from '../utils/excerpt';
+import { SITE, LABELS } from '../consts';
+
+const posts = await getPosts();
+const page = posts.slice(0, SITE.postsPerPage);
+const hasNext = posts.length > SITE.postsPerPage;
+---
+
+<Base title={SITE.title} description={SITE.subtitle}>
+  <div class="posts">
+    {page.map((post) => (
+      <PostCard
+        href={postUrl(post)}
+        title={post.data.title}
+        date={post.data.date}
+        tags={post.data.tags}
+        summary={post.data.description ?? excerpt(post.body ?? '')}
+      />
+    ))}
+
+    <div class="pagination">
+      <div class="pagination__buttons">
+        {hasNext && (
+          <span class="button next">
+            <a href="/page/2/">
+              <span class="button__text">{LABELS.olderPosts}</span>
+              <span class="button__icon">→</span>
+            </a>
+          </span>
+        )}
+      </div>
+    </div>
+  </div>
+</Base>
