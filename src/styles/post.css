@@ -262,8 +262,10 @@
 }
 
 /* The previous profile picture was a circular PNG cut-out; the replacement is a
-   plain photograph, so the circle is applied here instead of baked into the file. */
-.profile-photo {
+   plain photograph, so the circle is applied here. It is written as a plain
+   markdown image (which is what routes it through astro:assets), so it is
+   addressed by position rather than by a class. */
+.page-about .post-content > p:first-of-type img {
   width: 200px;
   height: 200px;
   border-radius: 50%;

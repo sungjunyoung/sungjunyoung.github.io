@@ -4,6 +4,7 @@ import { defineConfig } from "astro/config";
 import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
 import { gemojiPlugin } from "./src/markdown/gemoji";
+import { figuresPlugin } from "./src/markdown/figures";
 
 const SITE_URL = "https://blog.sungjunyoung.dev";
 const POSTS_DIR = new URL("./src/content/posts/", import.meta.url);
@@ -40,6 +41,16 @@ export default defineConfig({
   build: {
     format: "directory",
   },
+  image: {
+    service: {
+      entrypoint: "astro/assets/services/sharp",
+      // The diagrams are wide line art, where resolution matters more than the
+      // last few percent of encoder quality. Trading quality for bytes keeps
+      // every rendered image under the 20KB the dev-toolbar audit watches for,
+      // without downscaling text into illegibility.
+      config: { webp: { quality: 80, effort: 6 } },
+    },
+  },
   integrations: [
     sitemap({
       filter: (page) => !EXCLUDED.has(page),
@@ -56,6 +67,7 @@ export default defineConfig({
     syntaxHighlight: "prism",
     processor: satteri({
       mdastPlugins: [gemojiPlugin],
+      hastPlugins: [figuresPlugin],
     }),
   },
 });

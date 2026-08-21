@@ -63,17 +63,11 @@ func f() {
 또한, 생성 / 삭제 및 Context switch 시 스레드는 수 μs 정도 걸리는 반면 `goroutine` 은 수십 ns 만에 완료됩니다.
 스레드 생성 및 삭제에는 System Call 이 수행되어야 하지만, `goroutine` 은 System Call 없이 유저 스페이스에서 동작을 완료할 수 있기 때문입니다.
 
-<figure class="left">
-  <img src="/assets/posts/how-goroutine-works/goroutine-external-structure.png" alt="커널 스레드 위에서 실행되는 Goroutine" width="406" height="252" loading="lazy" decoding="async" />
-  <figcaption class="center">[그림-1] 커널 스레드 위에서 실행되는 Goroutine</figcaption>
-</figure>
+![커널 스레드 위에서 실행되는 Goroutine](../../assets/posts/how-goroutine-works/goroutine-external-structure.png "[그림-1] 커널 스레드 위에서 실행되는 Goroutine")
 
 이렇게 가벼운 `goroutine` 은 스레드 위에서 스케줄링되어 동작하게 됩니다.
 
-<figure class="left">
-  <img src="/assets/posts/how-goroutine-works/goroutine-binding.png" alt="Goroutine 의 실행구조" width="375" height="462" loading="lazy" decoding="async" />
-  <figcaption class="center">[그림-2] Goroutine 의 실행구조</figcaption>
-</figure>
+![Goroutine 의 실행구조](../../assets/posts/how-goroutine-works/goroutine-binding.png "[그림-2] Goroutine 의 실행구조")
 
 또한 위와 같이 하나의 OS 커널 스레드 에 바인딩된 논리적 프로세서에서 실행되며,
 `goroutine` 이 실행 가능한 상태가 되면 실행 큐에 추가되어 실행되게 되죠.
@@ -141,10 +135,7 @@ goroutine g1 이 실행되고, 종료 후 g2 가 실행되는 과정
 3. `g1` 의 작업이 끝나고 `T1` 스레드는 종료되지 않고 idle 상태로 보관됨
 4. 새로운 goroutine `g2` 가 생성되고, idle 상태의 스레드 `T1` 을 재활용하여 실행
 
-<figure class="left">
-  <img src="/assets/posts/how-goroutine-works/reuse-thread.webp" alt="커널 스레드 재활용" width="760" height="334" loading="lazy" decoding="async" />
-  <figcaption class="center">[그림-3] 커널 스레드 재활용</figcaption>
-</figure>
+![커널 스레드 재활용](../../assets/posts/how-goroutine-works/reuse-thread.gif "[그림-3] 커널 스레드 재활용")
 
 스레드를 재사용하는 것은 정말 좋은 아이디어 같습니다. 하지만, 여기서도 문제가 있습니다.
 만약 현재 상태에서 goroutine 이 끊임없이 생성되면 어떻게 될까요?
@@ -167,10 +158,7 @@ Go 에서는 이 조건을 CPU 코어의 갯수로 제한합니다.
 `rumtime.GOMAXPROCS` 로 설정이 가능합니다.
 이 설정은 하나의 노드에서 여러 Go 프로그램을 실행시킬 때 좀 더 좋은 성능을 위해 조절하기도 합니다.
 
-<figure class="left">
-  <img src="/assets/posts/how-goroutine-works/limit-thread.png" alt="커널 스레드 갯수 제한 (CPU 코어 = 2)" width="1520" height="337" loading="lazy" decoding="async" />
-  <figcaption class="center">[그림-4] 커널 스레드 갯수 제한 (CPU 코어 = 2)</figcaption>
-</figure>
+![커널 스레드 갯수 제한 (CPU 코어 = 2)](../../assets/posts/how-goroutine-works/limit-thread.png "[그림-4] 커널 스레드 갯수 제한 (CPU 코어 = 2)")
 
 위 그림에서, CPU 코어가 2개인 상황에서 `g2` 가 실행되어야 하는 시점에,
 모든 스레드가 busy 상태이면 CPU 코어 갯수 (2개) 이상으로 스레드를 생성하지 않고 대기합니다.
@@ -201,10 +189,7 @@ runqueue 는 Heap 영역에 있는 공동의 리소스이고,
 2. 모두 busy 스레드이기 때문에 새로운 스레드 T1 생성
 3. T1 이 g1 을 실행하려 하지만, runq B 에는 goroutine 이 없는 상태
 
-<figure class="left">
-  <img src="/assets/posts/how-goroutine-works/local-runqueue-1.webp" alt="스레드별 local runqueue 상황에서의 스케줄링" width="760" height="331" loading="lazy" decoding="async" />
-  <figcaption class="center">[그림-5] 스레드별 local runqueue 상황에서의 스케줄링</figcaption>
-</figure>
+![스레드별 local runqueue 상황에서의 스케줄링](../../assets/posts/how-goroutine-works/local-runqueue-1.gif "[그림-5] 스레드별 local runqueue 상황에서의 스케줄링")
 
 보시다시피, runq B 에는 할당된 goroutine 이 없기 때문에 실행시킬 goroutine 이 없습니다.
 어떻게 해야 할까요?
@@ -231,10 +216,7 @@ func stealWork(now int64) (gp *g, inheritTime bool, rnow, pollUntil int64, newWo
 
 위 코드에서 work stealing 을 확인할 수 있습니다.
 
-<figure class="left">
-  <img src="/assets/posts/how-goroutine-works/local-runqueue-2.webp" alt="Work Stealing" width="760" height="343" loading="lazy" decoding="async" />
-  <figcaption class="center">[그림-6] Work Stealing</figcaption>
-</figure>
+![Work Stealing](../../assets/posts/how-goroutine-works/local-runqueue-2.gif "[그림-6] Work Stealing")
 
 `[그림-5]` 의 과정을 다시 살펴보면, 위와 같이 다른 runqueue 의 작업을 훔쳐와 T1 스레드에서 동작시키는 것을 볼 수 있습니다.
 이렇게 다른 runqueue 의 작업의 절반을 가져옴으로서 전체적으로 작업도 골고루 분배될 수 있습니다.
@@ -277,10 +259,7 @@ Runtime Scheduler 는 Background 모니터 스레드를 통해 일정 시간 블
 
 이렇게 새로 만들어진 스레드의 runqueue 에, 기존에 쌓여있던 goroutine 작업들을 `handoff` 해줍니다.
 
-<figure class="left">
-  <img src="/assets/posts/how-goroutine-works/runqueue-handoff.png" alt="Runqueue Handoff" width="1520" height="399" loading="lazy" decoding="async" />
-  <figcaption class="center">[그림-7] Runqueue Handoff</figcaption>
-</figure>
+![Runqueue Handoff](../../assets/posts/how-goroutine-works/runqueue-handoff.png "[그림-7] Runqueue Handoff")
 
 `handoff` 를 통해서 goroutine 의 starvation 을 방지할 수 있습니다.
 

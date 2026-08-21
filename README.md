@@ -35,8 +35,23 @@ tags: [golang]
 ---
 ```
 
-Drafts are shown by `pnpm dev` and excluded from `pnpm build`. Post images go in
-`public/assets/posts/<slug>/` and are referenced by absolute path.
+Drafts are shown by `pnpm dev` and excluded from `pnpm build`.
+
+Post images go in `src/assets/posts/<slug>/` and are referenced with a relative
+markdown image, whose title becomes the caption:
+
+```markdown
+![alt text](../../assets/posts/my-post/diagram.png "[그림-1] 설명")
+```
+
+The build converts them to WebP (animated GIFs included) and fills in
+`width`/`height`/`loading`, and `src/markdown/figures.ts` wraps the pair in a
+`<figure>`. Nothing has to be optimised by hand — just keep sources at a sane
+resolution, since the article column is 760px wide and the build does not
+downscale.
+
+The social card is the one image built outside the pipeline; regenerate it with
+`scripts/make-og-card.py` after changing the site name.
 
 ## Deploy
 

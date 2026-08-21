@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerates the 1200x630 social card at public/assets/og/default.png.
-
-Run it after changing the profile photo or the site name:
+"""Regenerates the 1200x630 social card at public/assets/og/card.gif.
 
     nix shell --impure --expr \
       'let p = (builtins.getFlake (toString ./.)).inputs.nixpkgs.legacyPackages.aarch64-darwin;
@@ -9,43 +7,56 @@ Run it after changing the profile photo or the site name:
       --command python3 scripts/make-og-card.py
 
 The card is committed rather than built, so CI needs neither Pillow nor a font.
-Text is Latin only, which is why a system face is enough; per-post cards with
-Korean titles would need a CJK font shipped in the repo.
+
+It is a two frame GIF so the cursor blinks, the same as the header logo. Most
+social scrapers show only the first frame, which is why that frame is the one
+with the cursor lit — the still fallback still reads as the logo.
 """
 
 import pathlib
 
+from PIL import Image, ImageDraw, ImageFont
+
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+OUT = ROOT / "public/assets/og/card.gif"
 
 W, H = 1200, 630
-BG        = (41, 42, 45)      # --background (dark theme)
-FG        = (233, 233, 238)
-MUTED     = (115, 116, 123)   # --color-secondary
-ACCENT    = (254, 81, 134)    # the logo cursor pink
+BG = (41, 42, 45)  # --background, dark theme
+FG = (233, 233, 238)
+ACCENT = (254, 81, 134)  # the logo cursor pink
 
-img = Image.new("RGB", (W, H), BG)
-d = ImageDraw.Draw(img)
+# Helvetica is the closest system face to the site's Inter. Index 1 is Bold;
+# Avenir Next's collection leads with italics, which slants the text.
+FONT = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 104, index=1)
 
-# circular profile photo, mirroring the About page treatment
-SIZE, CX, CY = 260, 150, (H - 260) // 2
-photo = Image.open(str(ROOT / "public/assets/img/profile.jpg")).convert("RGB").resize((SIZE, SIZE), Image.LANCZOS)
-mask = Image.new("L", (SIZE * 4, SIZE * 4), 0)
-ImageDraw.Draw(mask).ellipse((0, 0, SIZE * 4, SIZE * 4), fill=255)
-img.paste(photo, (CX, CY), mask.resize((SIZE, SIZE), Image.LANCZOS))
+TEXT = "sungjunyoung"
+# Sits left of centre rather than centred, so the cursor has room to blink
+# without the whole block looking off-balance.
+X, BASELINE = 150, 262
+CURSOR_GAP, CURSOR_W, CURSOR_H = 22, 16, 96
 
-# Helvetica is the closest system face to the site's Inter.
-# Index 0 is Regular, 1 is Bold — Avenir Next's collection leads with the
-# italics, which is what slanted the first attempt.
-def font(px, weight="Bold"):
-    return ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", px,
-                              index={"Regular": 0, "Bold": 1}[weight])
 
-x = CX + SIZE + 70
-d.text((x, 232), "sungjunyoung", font=font(80, "Bold"), fill=FG)
-d.text((x, 336), "blog.sungjunyoung.dev", font=font(32, "Regular"), fill=MUTED)
+def frame(cursor: bool) -> Image.Image:
+    img = Image.new("RGB", (W, H), BG)
+    draw = ImageDraw.Draw(img)
+    draw.text((X, BASELINE), TEXT, font=FONT, fill=FG)
 
-# the blinking cursor from the site logo, frozen
-d.rectangle((x, 396, x + 22, 400), fill=ACCENT)
+    if cursor:
+        left = X + draw.textlength(TEXT, font=FONT) + CURSOR_GAP
+        top = BASELINE + 14
+        draw.rounded_rectangle(
+            (left, top, left + CURSOR_W, top + CURSOR_H), radius=2, fill=ACCENT
+        )
+    return img
 
-img.save(str(ROOT / "public/assets/og/default.png"), "PNG", optimize=True)
-print("written")
+
+on, off = frame(True), frame(False)
+on.save(
+    OUT,
+    save_all=True,
+    append_images=[off],
+    duration=[600, 500],
+    loop=0,
+    optimize=True,
+)
+print(f"written {OUT} ({OUT.stat().st_size} bytes)")

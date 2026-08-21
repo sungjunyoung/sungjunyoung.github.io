@@ -16,7 +16,7 @@ const date = frontmatter.date ? new Date(frontmatter.date) : null;
 ---
 
 <Base title={frontmatter.title} description={frontmatter.description}>
-  <article class="post">
+  <article class={`post page-${frontmatter.title.toLowerCase()}`}>
     <h1 class="post-title">{frontmatter.title}</h1>
     <div class="post-meta">
       {date && <time class="post-date" datetime={date.toISOString()}>{formatDate(date)}</time>}
