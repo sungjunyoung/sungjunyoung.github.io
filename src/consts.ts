@@ -1,6 +1,6 @@
 export const SITE = {
   title: "sungjunyoung",
-  description: "❤️ cloud native, sungjunyoung's blog",
+  description: "❤️ cloud native",
   author: "Junyoung, Sung",
   url: "https://blog.sungjunyoung.dev",
   /** The posts are written in Korean; search engines target on this. */
