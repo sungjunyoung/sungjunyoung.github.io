@@ -1,6 +1,6 @@
 export const SITE = {
   title: "sungjunyoung",
-  description: "Golang, Kubernetes, 그리고 인프라에 대해 씁니다.",
+  description: "❤️ cloud native, sungjunyoung's blog",
   author: "Junyoung, Sung",
   url: "https://blog.sungjunyoung.dev",
   /** The posts are written in Korean; search engines target on this. */

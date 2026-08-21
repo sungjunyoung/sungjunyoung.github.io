@@ -338,7 +338,10 @@ hr {
 h1:hover a,
 h2:hover a,
 h3:hover a,
-h4:hover a {
+h4:hover a,
+/* The anchors are keyboard reachable, so they have to become visible on focus
+   as well as on hover. */
+.h-anchor:focus-visible {
   visibility: visible;
   opacity: 1;
   transition-delay: 0s;
