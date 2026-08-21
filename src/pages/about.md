@@ -13,7 +13,7 @@ author: Junyoung, Sung
 
 ## :email: Contact
 
-- **Email** : wnsdud1861@gmail.com
+- **Email** : wnsdud1861@gmail.com / junyoung.sung@homeco.kr
 - **LinkedIn** : https://www.linkedin.com/in/junyoung-sung-986412121/
 
 ---
@@ -26,7 +26,8 @@ author: Junyoung, Sung
 
 ## :ant: Career
 
-- **2022.03 ~ / [Viva Republica (Toss)](https://toss.im)** : DevOps Engineer
+- **2025.05 ~ / [Home:co](https://homeco.kr)** : Lead Engineer
+- **2022.03 ~ 2025.05 / [Viva Republica (Toss)](https://toss.im)** : DevOps Engineer
 - **2021.08 ~ 2022.03 / [NAVER LABS](https://www.naverlabs.com/)** : Software & DevOps Engineer
 - **2018.06 ~ 2021.07 / [NAVER](https://www.navercorp.com/)** : Platform & DevOps Engineer
 - **2017.12 ~ 2018.06 / [NAVER](https://www.navercorp.com/)**: Platform Development Intern
