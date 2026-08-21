@@ -330,6 +330,11 @@ hr {
     opacity 0.1s linear;
 }
 
+/* The glyph lives here, not in the markup — see src/markdown/heading-anchors.ts. */
+.h-anchor::after {
+  content: '#';
+}
+
 h1:hover a,
 h2:hover a,
 h3:hover a,

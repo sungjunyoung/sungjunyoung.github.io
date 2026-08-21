@@ -13,7 +13,7 @@ interface Props {
 const { title, description = '', type = 'website', publishedAt, tags = [] } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/assets/img/profile.png', Astro.site).href;
+const ogImage = new URL('/assets/img/profile.jpg', Astro.site).href;
 ---
 
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />

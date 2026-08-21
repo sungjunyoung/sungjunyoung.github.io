@@ -5,7 +5,7 @@ date: 2021-05-16
 author: Junyoung, Sung
 ---
 
-![Profile](/assets/img/profile.png)
+![Profile](/assets/img/profile.jpg)
 
 :heart: Golang / Kubernetes
 

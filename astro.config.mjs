@@ -1,9 +1,8 @@
 // @ts-check
 import { defineConfig } from "astro/config";
-import { satteri, satteriHeadingIdsPlugin } from "@astrojs/markdown-satteri";
+import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
 import { gemojiPlugin } from "./src/markdown/gemoji";
-import { headingAnchorsPlugin } from "./src/markdown/heading-anchors";
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,9 +18,6 @@ export default defineConfig({
     syntaxHighlight: "prism",
     processor: satteri({
       mdastPlugins: [gemojiPlugin],
-      // Astro assigns heading ids after user plugins run, so pull its own
-      // plugin forward to have the ids in hand when the anchors are appended.
-      hastPlugins: [satteriHeadingIdsPlugin(), headingAnchorsPlugin],
     }),
   },
 });
