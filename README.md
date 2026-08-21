@@ -1,4 +1,4 @@
-# blog.sungjunyoung.dev
+# sungjunyoung.dev
 
 Personal blog, built with [Astro](https://astro.build).
 
@@ -41,7 +41,7 @@ Drafts are shown by `pnpm dev` and excluded from `pnpm build`. Post images go in
 ## Deploy
 
 Pushing to `master` builds and publishes to GitHub Pages via
-`.github/workflows/deploy.yml`. The custom domain is held by `public/CNAME`.
+`.github/workflows/deploy.yml`. The custom domain (`sungjunyoung.dev`) is held by `public/CNAME`.
 
 ## Layout
 

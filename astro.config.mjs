@@ -7,7 +7,7 @@ import { headingAnchorsPlugin } from "./src/markdown/heading-anchors";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://blog.sungjunyoung.dev",
+  site: "https://sungjunyoung.dev",
   trailingSlash: "always",
   build: {
     format: "directory",

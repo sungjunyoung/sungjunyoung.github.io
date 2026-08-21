@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://blog.sungjunyoung.dev/sitemap-index.xml
+Sitemap: https://sungjunyoung.dev/sitemap-index.xml

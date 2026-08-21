@@ -3,7 +3,7 @@ export const SITE = {
   subtitle: "",
   description: "",
   author: "Junyoung, Sung",
-  url: "https://blog.sungjunyoung.dev",
+  url: "https://sungjunyoung.dev",
   lang: "en-us",
   postsPerPage: 5,
   googleAnalyticsId: "G-CMFR9WZ898",
