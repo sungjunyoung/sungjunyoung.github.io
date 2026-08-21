@@ -339,6 +339,8 @@ h1:hover a,
 h2:hover a,
 h3:hover a,
 h4:hover a,
+h5:hover a,
+h6:hover a,
 /* The anchors are keyboard reachable, so they have to become visible on focus
    as well as on hover. */
 .h-anchor:focus-visible {
