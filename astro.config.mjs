@@ -19,7 +19,11 @@ function postDates() {
   for (const file of readdirSync(POSTS_DIR)) {
     if (!file.endsWith(".md")) continue;
     const source = readFileSync(new URL(file, POSTS_DIR), "utf8");
-    const match = source.match(/^date:\s*(.+)$/m);
+    // Only the frontmatter block: a `date:` line in prose or inside a fenced
+    // code sample must not be mistaken for the publication date.
+    const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    if (!frontmatter) continue;
+    const match = frontmatter[1].match(/^date:\s*(.+)$/m);
     if (!match) continue;
     const date = new Date(match[1].trim());
     if (Number.isNaN(date.getTime())) continue;

@@ -13,10 +13,17 @@ interface Props {
 
 const { frontmatter } = Astro.props;
 const date = frontmatter.date ? new Date(frontmatter.date) : null;
+
+// Lets a stylesheet target one page (see .page-about in post.css). Slugified,
+// because a title with spaces would otherwise emit two class names.
+const pageClass = `page-${frontmatter.title
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "")}`;
 ---
 
 <Base title={frontmatter.title} description={frontmatter.description}>
-  <article class={`post page-${frontmatter.title.toLowerCase()}`}>
+  <article class={`post ${pageClass}`}>
     <h1 class="post-title">{frontmatter.title}</h1>
     <div class="post-meta">
       {date && <time class="post-date" datetime={date.toISOString()}>{formatDate(date)}</time>}
