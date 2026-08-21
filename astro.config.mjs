@@ -6,7 +6,7 @@ import { gemojiPlugin } from "./src/markdown/gemoji";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://sungjunyoung.dev",
+  site: "https://blog.sungjunyoung.dev",
   trailingSlash: "always",
   build: {
     format: "directory",
