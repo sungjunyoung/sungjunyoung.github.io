@@ -33,27 +33,36 @@ ACCENT = (254, 81, 134)  # the logo cursor pink
 
 # Helvetica is the closest system face to the site's Inter. Index 1 is Bold;
 # Avenir Next's collection leads with italics, which slants the text.
-FONT = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 104, index=1)
+FONT_PX = 104
+FONT = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", FONT_PX, index=1)
 
 TEXT = "sungjunyoung"
 # Sits left of centre rather than centred, so the cursor has room to blink
 # without the whole block looking off-balance.
-X, BASELINE = 150, 262
-# The header logo's cursor is chunky relative to its text (10px on an 18px
-# font); 32px keeps that character here without reading as a plain block.
-CURSOR_GAP, CURSOR_W, CURSOR_H = 26, 32, 96
+X, TEXT_TOP = 150, 262
+# .logo__cursor is an inline-block, so it rests on the text baseline.
+BASELINE = TEXT_TOP + FONT.getmetrics()[0]
+# The cursor is the header logo's, scaled. src/styles/logo.css sizes it in
+# pixels against an 18px .logo__text, so the ratios are taken from there rather
+# than eyeballed — change the CSS and these follow.
+LOGO_FONT_PX = 18  # .logo__text: 1.125rem
+CURSOR_W = round(10 / LOGO_FONT_PX * FONT_PX)  # .logo__cursor width
+CURSOR_H = round(16 / LOGO_FONT_PX * FONT_PX)  # .logo__cursor height: 1rem
+CURSOR_GAP = round(5 / LOGO_FONT_PX * FONT_PX)  # .logo__cursor margin-left
+CURSOR_RADIUS = round(1 / LOGO_FONT_PX * FONT_PX)  # .logo__cursor border-radius
 
 
 def frame(cursor: bool) -> Image.Image:
     img = Image.new("RGB", (W, H), BG)
     draw = ImageDraw.Draw(img)
-    draw.text((X, BASELINE), TEXT, font=FONT, fill=FG)
+    draw.text((X, TEXT_TOP), TEXT, font=FONT, fill=FG)
 
     if cursor:
         left = X + draw.textlength(TEXT, font=FONT) + CURSOR_GAP
-        top = BASELINE + 14
         draw.rounded_rectangle(
-            (left, top, left + CURSOR_W, top + CURSOR_H), radius=3, fill=ACCENT
+            (left, BASELINE - CURSOR_H, left + CURSOR_W, BASELINE),
+            radius=CURSOR_RADIUS,
+            fill=ACCENT,
         )
     return img
 
@@ -63,7 +72,7 @@ on.save(
     OUT_GIF,
     save_all=True,
     append_images=[off],
-    duration=[600, 500],
+    duration=[500, 500],
     loop=0,
     optimize=True,
 )
