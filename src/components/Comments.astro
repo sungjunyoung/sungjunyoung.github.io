@@ -1,7 +1,21 @@
 ---
-// utterances, restored from the pre-hello-friend version of this blog. Comments
-// are keyed by `issue-term: pathname`, and the post URLs are unchanged, so the
-// existing GitHub issues keep matching.
+// giscus, replacing utterances. Comments now live in GitHub Discussions rather
+// than Issues; `mapping: pathname` keeps the same per-post key the old setup
+// used, so issues converted to discussions still match their post.
+//
+// The ids are opaque GitHub node ids, not secrets — giscus needs them in the
+// markup to resolve the repo and category without an extra round trip.
+const REPO = 'sungjunyoung/sungjunyoung.github.io';
+const REPO_ID = 'R_kgDOD8aG0w';
+const CATEGORY = 'Announcements';
+const CATEGORY_ID = 'DIC_kwDOD8aG084DD8gh';
 ---
 
-<div class="comments" data-utterances-repo="sungjunyoung/sungjunyoung.github.io"></div>
+<div
+  class="comments"
+  data-giscus-repo={REPO}
+  data-giscus-repo-id={REPO_ID}
+  data-giscus-category={CATEGORY}
+  data-giscus-category-id={CATEGORY_ID}
+>
+</div>

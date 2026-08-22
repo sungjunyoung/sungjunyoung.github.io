@@ -1,5 +1,5 @@
 // Port of hello-friend's assets/js/theme.js, plus an event so other widgets
-// (the utterances iframe) can follow the toggle.
+// (the giscus iframe) can follow the toggle.
 export const THEME_CHANGE_EVENT = "sjy:themechange";
 
 export function currentTheme(): "dark" | "light" {
