@@ -7,7 +7,7 @@ author: Junyoung, Sung
 
 ![Junyoung, Sung](../assets/img/profile.jpg)
 
-:heart: Golang / Kubernetes
+:heart: Cloud Native
 
 ---
 
