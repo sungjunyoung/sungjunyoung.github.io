@@ -1,41 +1,40 @@
 .post {
   width: 100%;
-  max-width: 800px;
+  max-width: var(--content-width);
   text-align: left;
   padding: 20px;
   margin: 20px auto;
-}
-
-@media (max-width: 900px) {
-  .post {
-    max-width: 660px;
-  }
 }
 
 .post:not(:last-of-type) {
   border-bottom: 1px solid var(--border-color);
 }
 
+/* Date, reading time and tags sit on one row rather than stacking, so the
+   metadata costs a single line instead of three. */
 .post-meta {
-  font-size: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 0.875rem;
+  color: var(--color-secondary);
   margin-bottom: 10px;
 }
 
 @media (max-width: 684px) {
   .post-meta {
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
   }
 }
 
+/* Size comes from the h1 rule in main.css so the page title and the scale it
+   belongs to are stated in one place; only the list overrides it. */
 .post-title {
-  font-size: 2.625rem;
   margin: 0 0 20px;
-}
-
-@media (max-width: 684px) {
-  .post-title {
-    font-size: 2rem;
-  }
+  /* The dark theme body colour is a mid grey; a title left to inherit it
+     reads as dimmer than the text underneath it. */
+  color: var(--color-strong);
 }
 
 .post-title a {
@@ -51,6 +50,33 @@
 
 .post-tags a {
   text-decoration: none;
+}
+
+/* --- reading time badge --------------------------------------------------- */
+
+/* Estimated from the post body — see src/utils/readingTime.ts. The clock is
+   what makes the bare number readable at a glance; the pill keeps it from
+   being mistaken for part of the date beside it. */
+.reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px 3px;
+  border-radius: 999px;
+  background: var(--background-secondary);
+  /* Not --color-secondary: against --background-secondary the two greys are
+     barely a step apart in the dark theme. */
+  color: var(--color);
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.reading-time__icon {
+  flex: none;
+  width: 12px;
+  height: 12px;
 }
 
 .post-content {
@@ -96,6 +122,17 @@
   --toc-width: 220px;
 }
 
+/* The article and the rail have to be the same box, or the rail label and the
+   post title start at different x. They used to carry separate width rules on
+   opposite sides of the same 900px breakpoint — the article narrowed at 900
+   and below, the rail at 900 and above — so below 1360px they were never
+   actually the same width. One token, read by both, cannot drift again. */
+@media (max-width: 900px) {
+  :root {
+    --content-width: 660px;
+  }
+}
+
 .post-layout {
   display: flex;
   flex-direction: column;
@@ -131,21 +168,15 @@
   margin: 20px 0 10px;
 }
 
-@media (min-width: 900px) and (max-width: 1359px) {
-  .table-of-contents {
-    max-width: 660px;
-  }
-}
-
 @media (min-width: 1360px) {
   .table-of-contents {
     order: 0;
     grid-column: 3;
     justify-self: center;
     position: sticky;
-    /* 10px lower than the article so the small caps label sits optically level
-       with the cap height of the 2.625rem post title. */
-    top: 40px;
+    /* A little lower than the article so the small caps label sits optically
+       level with the cap height of the 2rem post title. */
+    top: 34px;
     width: min(var(--toc-width), 100%);
     max-width: none;
     padding: 0;
@@ -236,6 +267,9 @@
   text-decoration: none;
   font-size: 0.85rem;
   line-height: 1.4;
+  /* Headings like containerEphemeralStorageLimitEviction have no break
+     opportunity, so in the 220px rail they ran straight off the right edge. */
+  overflow-wrap: anywhere;
   transition:
     color 0.15s ease,
     border-color 0.15s ease;
@@ -270,4 +304,85 @@
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+/* ---------------------------------------------------------------------------
+   List view
+
+   On an index a title is a row in a table of contents, not a page heading, so
+   it drops from the article's 2.625rem to a size several of which fit in one
+   glance. That, the single meta line above it, the clamped summary, and
+   dropping the "Read More" link (which only repeated the title's own href)
+   take a card from roughly 330px tall to 120px — the front page now fits on
+   one screen instead of scrolling three times.
+   --------------------------------------------------------------------------- */
+
+.post.on-list {
+  padding: 28px 20px;
+  margin: 0 auto;
+}
+
+@media (max-width: 684px) {
+  .post.on-list {
+    padding: 22px 20px;
+  }
+}
+
+.on-list .post-meta {
+  font-size: 0.8125rem;
+  margin-bottom: 9px;
+}
+
+.on-list .post-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0;
+}
+
+@media (max-width: 684px) {
+  .on-list .post-title {
+    font-size: 1.1875rem;
+  }
+}
+
+/* Hover is marked with a rule under the title and nothing else — the title
+   keeps its colour, so the row does not change weight or hue as the pointer
+   crosses the list. The offset keeps the rule clear of Hangul descenders. */
+.on-list .post-title a:hover,
+.on-list .post-title a:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+}
+
+/* Tags join the meta row, so none of the block layout the article page gives
+   them applies here. */
+.on-list .post-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  font-size: inherit;
+  opacity: 1;
+}
+
+.on-list .post-tags a:hover,
+.on-list .post-tags a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.on-list .post-summary {
+  margin: 9px 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  /* Two lines is enough to tell whether this is the post you came for. Posts
+     that set no description fall back to a 70-word excerpt, which would
+     otherwise run to five lines and undo the rest of this. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }

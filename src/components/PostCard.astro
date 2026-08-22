@@ -1,32 +1,36 @@
 ---
-import { formatDate, LABELS } from '../consts';
+import ReadingTime from './ReadingTime.astro';
+import { formatDate } from '../consts';
 
 interface Props {
   href: string;
   title: string;
   date: Date;
+  minutes: number;
   tags: readonly string[];
   summary: string;
 }
 
-const { href, title, date, tags, summary } = Astro.props;
+const { href, title, date, minutes, tags, summary } = Astro.props;
 ---
 
 <article class="post on-list">
-  <h1 class="post-title"><a href={href}>{title}</a></h1>
+  {/* Date, reading time and tags read as one line above the title: the dates
+      set in tabular figures line up down the left edge of the list, so the
+      index can be scanned by when rather than only by what. */}
   <div class="post-meta">
     <time class="post-date" datetime={date.toISOString()}>{formatDate(date)}</time>
+    <ReadingTime minutes={minutes} />
+    {tags.length > 0 && (
+      <span class="post-tags">
+        {tags.map((tag) => <a href={`/tags/${tag}/`}>#{tag}</a>)}
+      </span>
+    )}
   </div>
 
-  {tags.length > 0 && (
-    <span class="post-tags">
-      {tags.map((tag) => (
-        <Fragment><a href={`/tags/${tag}/`}>#{tag}</a>&nbsp;</Fragment>
-      ))}
-    </span>
-  )}
+  <h2 class="post-title">
+    <a href={href}>{title}</a>
+  </h2>
 
-  <div class="post-content">{summary}</div>
-
-  <div><a class="read-more button" href={href}>{LABELS.readMore} →</a></div>
+  <p class="post-summary">{summary}</p>
 </article>
