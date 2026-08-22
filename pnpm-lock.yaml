@@ -23,6 +23,9 @@ importers:
       gemoji:
         specifier: ^8.1.0
         version: 8.1.0
+      mixpanel-browser:
+        specifier: 2.82.1
+        version: 2.82.1
       satteri:
         specifier: ^0.10.5
         version: 0.10.5
@@ -583,6 +586,27 @@ packages:
   '@jridgewell/sourcemap-codec@1.5.5':
     resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
 
+  '@mixpanel/rrdom@2.0.0-alpha.18.6':
+    resolution: {integrity: sha512-JY1Kr8c5pPmFBdPMLIEm1e0/hw2xvsS515Qqf+5Lpm0AW+2e/ZvA6P6M+z4fXeuachfZZv06UhTvixiUJv355Q==}
+
+  '@mixpanel/rrweb-plugin-console-record@2.0.0-alpha.18.4':
+    resolution: {integrity: sha512-gGxEnNpfWurQht+fpSJbwPV60ug0LAENlk4Ux3XRmYooNJGPBO1TiQHcM7g0yhrKf4tfbTiKKZ4EXzFlOZs/pw==}
+    peerDependencies:
+      '@mixpanel/rrweb': ^2.0.0-alpha.18
+      '@mixpanel/rrweb-utils': ^2.0.0-alpha.18
+
+  '@mixpanel/rrweb-snapshot@2.0.0-alpha.18.6':
+    resolution: {integrity: sha512-8c8TArw8l0mmYPvKc3asq3hIzQ7uVrNVQ4xsVt+ESxHohW8r47ua/YLDpd2jV30FZj4Y3KvGTQl5sXLDI+02Zw==}
+
+  '@mixpanel/rrweb-types@2.0.0-alpha.18.6':
+    resolution: {integrity: sha512-KvaTcbZR4mJ3w1b1fEq4AeSg9rUqvQ1gKko9r56ANUw4fqWam23xoXrLJ8Og+hPYTwIDQ99TkZBVXFTGJqYwpQ==}
+
+  '@mixpanel/rrweb-utils@2.0.0-alpha.18.4':
+    resolution: {integrity: sha512-c3nUbQl19kxHjf8nowFMeXlJw0ZqLesIVBb9t4g1nC4WtaNEPkFotWRdGt5V2cJNQ+aY38/v2uYb8Ren4IcdSQ==}
+
+  '@mixpanel/rrweb@2.0.0-alpha.18.4':
+    resolution: {integrity: sha512-ICpEYDFEEiCoUuQg+de3VvQCsolF4lNHfEM9DBp5Pwuc7EgXqwWV4wUpiRF/NbhoKk+82X1Qe+oqqlKJb/CGFw==}
+
   '@napi-rs/wasm-runtime@1.2.3':
     resolution: {integrity: sha512-UMduMbqO5s5zF2NkNacMT/yK5Y5QiKvWr2+50bzIIxFDwVJ2h49b+oyjaCGPhJxd2/gC2x39EHv/gHVuu36x2Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=23.5.0}
@@ -732,6 +756,9 @@ packages:
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
 
+  '@types/css-font-loading-module@0.0.7':
+    resolution: {integrity: sha512-nl09VhutdjINdWyXxHWN/w9zlNCfr60JUqJbd24YXUuCwgeL0TpFSdElCwb6cxfB6ybE19Gjj4g0jsgkXxKv1Q==}
+
   '@types/estree-jsx@1.0.5':
     resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
 
@@ -740,6 +767,9 @@ packages:
 
   '@types/hast@3.0.5':
     resolution: {integrity: sha512-rp/ezSWaD1m44dPKICGhiskI13nVr7qTloFwDa/IYkhhf5nzwP+zIQcIJh3WIFSBOy/H1PzB40jPjMDksN4F+g==}
+
+  '@types/json-logic-js@2.0.5':
+    resolution: {integrity: sha512-hu/FTi0zwCjQEFfbPur275cNoZj6NsuOBhhYNzqoSdfmMhuxFr58OZ957lyIOWc9+kO+2tFlBthRjcxuytD4HA==}
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -799,6 +829,9 @@ packages:
 
   '@vscode/l10n@0.0.18':
     resolution: {integrity: sha512-KYSIHVmslkaCDyw013pphY+d7x1qV8IZupYfeIfzNA+nsaWHbn5uPuQRvdRFsa9zFzGeudPuoGoZ1Op4jrJXIQ==}
+
+  '@xstate/fsm@1.6.5':
+    resolution: {integrity: sha512-b5o1I6aLNeYlU/3CPlj/Z91ybk1gUsKT+5NAJI+2W4UjvS5KLG28K9v5UvNoFVjHV8PajVZ00RH3vnjyQO7ZAw==}
 
   ajv-draft-04@1.0.0:
     resolution: {integrity: sha512-mv00Te6nmYbRp5DCwclxtt7yV/joXJPGS7nM+97GdxvuttCOfgI3K4U25zboyeX0O+myI8ERluxQe5wljMmVIw==}
@@ -865,6 +898,10 @@ packages:
 
   bail@2.0.2:
     resolution: {integrity: sha512-0xO6mYd7JB2YesxDKplafRpsiOzPt9V02ddPCLbY1xYGPOX24NTyN50qnUxgCPcSoYMhKpAuBTjQoRZCAkUDRw==}
+
+  base64-arraybuffer@1.0.2:
+    resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
+    engines: {node: '>= 0.6.0'}
 
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
@@ -1137,6 +1174,9 @@ packages:
     resolution: {integrity: sha512-CY6crGq313MX8GkwvB7tzgp99vjQxY1++5y10/BKN/GUfHqWaOGQMNZkBvqSzsZKWk/ijwHlWzzkLulsGHhjWQ==}
     hasBin: true
 
+  json-logic-js@2.0.5:
+    resolution: {integrity: sha512-rTT2+lqcuUmj4DgWfmzupZqQDA64AdmYqizzMPWj3DxGdfFNsxPpcNVSaTj4l8W2tG/+hg7/mQhxjU3aPacO6g==}
+
   json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
 
@@ -1261,6 +1301,12 @@ packages:
 
   micromark-util-types@2.0.2:
     resolution: {integrity: sha512-Yw0ECSpJoViF1qTU4DC6NwtC4aWGt1EkzaQB8KPPyCRR8z9TWeV0HbEFGTO+ZY1wB22zmxnJqhPyTpOVCpeHTA==}
+
+  mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+
+  mixpanel-browser@2.82.1:
+    resolution: {integrity: sha512-meJv23+7YYUHs08VlIVUC4x9riKnCLy6THQ264idlonBKzOq4LmmubOjOm71nVRm6osqEbXeXH2fwYrNXHRG1g==}
 
   mrmime@2.0.1:
     resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
@@ -2266,6 +2312,34 @@ snapshots:
 
   '@jridgewell/sourcemap-codec@1.5.5': {}
 
+  '@mixpanel/rrdom@2.0.0-alpha.18.6':
+    dependencies:
+      '@mixpanel/rrweb-snapshot': 2.0.0-alpha.18.6
+
+  '@mixpanel/rrweb-plugin-console-record@2.0.0-alpha.18.4(@mixpanel/rrweb-utils@2.0.0-alpha.18.4)(@mixpanel/rrweb@2.0.0-alpha.18.4)':
+    dependencies:
+      '@mixpanel/rrweb': 2.0.0-alpha.18.4
+      '@mixpanel/rrweb-utils': 2.0.0-alpha.18.4
+
+  '@mixpanel/rrweb-snapshot@2.0.0-alpha.18.6':
+    dependencies:
+      postcss: 8.5.26
+
+  '@mixpanel/rrweb-types@2.0.0-alpha.18.6': {}
+
+  '@mixpanel/rrweb-utils@2.0.0-alpha.18.4': {}
+
+  '@mixpanel/rrweb@2.0.0-alpha.18.4':
+    dependencies:
+      '@mixpanel/rrdom': 2.0.0-alpha.18.6
+      '@mixpanel/rrweb-snapshot': 2.0.0-alpha.18.6
+      '@mixpanel/rrweb-types': 2.0.0-alpha.18.6
+      '@mixpanel/rrweb-utils': 2.0.0-alpha.18.4
+      '@types/css-font-loading-module': 0.0.7
+      '@xstate/fsm': 1.6.5
+      base64-arraybuffer: 1.0.2
+      mitt: 3.0.1
+
   '@napi-rs/wasm-runtime@1.2.3(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     dependencies:
       '@emnapi/core': 1.11.1
@@ -2378,6 +2452,8 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
+  '@types/css-font-loading-module@0.0.7': {}
+
   '@types/estree-jsx@1.0.5':
     dependencies:
       '@types/estree': 1.0.9
@@ -2387,6 +2463,8 @@ snapshots:
   '@types/hast@3.0.5':
     dependencies:
       '@types/unist': 3.0.3
+
+  '@types/json-logic-js@2.0.5': {}
 
   '@types/mdast@4.0.4':
     dependencies:
@@ -2463,6 +2541,8 @@ snapshots:
       vscode-uri: 3.1.0
 
   '@vscode/l10n@0.0.18': {}
+
+  '@xstate/fsm@1.6.5': {}
 
   ajv-draft-04@1.0.0(ajv@8.20.0):
     optionalDependencies:
@@ -2598,6 +2678,8 @@ snapshots:
   axobject-query@4.1.0: {}
 
   bail@2.0.2: {}
+
+  base64-arraybuffer@1.0.2: {}
 
   boolbase@1.0.0: {}
 
@@ -2874,6 +2956,8 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
+  json-logic-js@2.0.5: {}
+
   json-schema-traverse@1.0.0: {}
 
   jsonc-parser@2.3.1: {}
@@ -2977,6 +3061,16 @@ snapshots:
   micromark-util-symbol@2.0.1: {}
 
   micromark-util-types@2.0.2: {}
+
+  mitt@3.0.1: {}
+
+  mixpanel-browser@2.82.1:
+    dependencies:
+      '@mixpanel/rrweb': 2.0.0-alpha.18.4
+      '@mixpanel/rrweb-plugin-console-record': 2.0.0-alpha.18.4(@mixpanel/rrweb-utils@2.0.0-alpha.18.4)(@mixpanel/rrweb@2.0.0-alpha.18.4)
+      '@mixpanel/rrweb-utils': 2.0.0-alpha.18.4
+      '@types/json-logic-js': 2.0.5
+      json-logic-js: 2.0.5
 
   mrmime@2.0.1: {}
 
