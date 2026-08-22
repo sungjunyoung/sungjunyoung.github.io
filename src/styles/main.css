@@ -172,6 +172,10 @@ a {
 img {
   display: block;
   max-width: 100%;
+  /* astro:assets stamps intrinsic width/height on every image to reserve layout
+     space. Without this, a narrow viewport shrinks the width to fit but keeps
+     the stamped height, so the picture squashes horizontally. */
+  height: auto;
 }
 
 img.left {
