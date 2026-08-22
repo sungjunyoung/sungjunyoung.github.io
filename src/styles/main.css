@@ -46,7 +46,13 @@ body {
      as 400 and the gap was never as small as the stylesheet claimed. */
   font-weight: 400;
   font-feature-settings: "liga", "calt", "tnum", "case";
-  line-height: 1.54;
+  /* Hangul packs more strokes into the same em than Latin does, so the same
+     leading reads tighter in Korean. 1.54 sat right on the 1.5 floor the
+     accessibility guidance treats as a minimum, and below every Korean site
+     worth comparing against (Naver/Daum news 1.55-1.63, Brunch 1.618, Publy
+     1.8). Applies on desktop too — the 760px column runs ~45 Hangul to the
+     line there, which needs the leading more, not less. */
+  line-height: 1.7;
   background-color: var(--background);
   color: var(--color);
   text-rendering: optimizeLegibility;
@@ -79,6 +85,18 @@ h6 {
 strong,
 b {
   font-weight: 700;
+  color: var(--color-strong);
+}
+
+/* Same reasoning as .post-title: the dark theme's body colour is a mid grey, so
+   a heading left to inherit it separates from the paragraphs by weight alone.
+   Stepping up to --color-strong gives the section break a second signal. */
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
   color: var(--color-strong);
 }
 
@@ -131,8 +149,13 @@ h4 {
 }
 
 @media (max-width: 684px) {
+  /* 17px is where the Korean-language guidance converges for a phone: KRDS
+     sets it as the mobile body default, iOS HIG specifies 17pt, and Daum,
+     Naver, Nate and Brunch all measure 17px in the wild. 16px is the floor
+     these guides forbid going under, not the size they recommend. Stated in
+     rem so a reader who has raised their browser's font size still gets it. */
   body {
-    font-size: 1rem;
+    font-size: 1.0625rem;
   }
 
   h1 {
@@ -260,6 +283,10 @@ pre {
   padding: 20px;
   border-radius: 8px;
   font-size: 0.9rem;
+  /* Pinned rather than inherited: the body's 1.7 is leading for running
+     Hangul, and a code block set that loosely drifts apart into unrelated
+     lines. */
+  line-height: 1.55;
   overflow: auto;
 }
 
