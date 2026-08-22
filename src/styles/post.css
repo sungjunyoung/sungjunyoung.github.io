@@ -248,7 +248,7 @@
 /* The reading position is shown by the border, not a bullet or a marker. */
 .table-of-contents a.active {
   color: var(--color);
-  border-left-color: #fe5186;
+  border-left-color: var(--accent);
 }
 
 .table-of-contents ul ul a {

@@ -1,14 +1,20 @@
 /**
  * Approximates Hugo's default `.Summary`: the first 70 words of the rendered
- * content, as plain text. Posts here set no `description`, so the old list
- * pages showed exactly this.
+ * content, as plain text. Only posts that set no `description` fall back to
+ * this, so it is the last resort rather than the usual path.
  */
 const SUMMARY_LENGTH = 70;
 
 export function excerpt(markdown: string, limit = SUMMARY_LENGTH): string {
   const plain = markdown
     .replace(/```[\s\S]*?```/g, "") // fenced code
-    .replace(/^\s*>\s?/gm, "") // blockquote markers
+    // Whole blockquote and heading lines go, not just their markers. Posts open
+    // with a callout ("이 글은 AI 의 도움을 받아…") or a source note above the
+    // first heading, and folding those into running prose gave a summary that
+    // read as the article's furniture instead of its subject.
+    .replace(/^\s*>.*$/gm, "") // blockquote lines
+    .replace(/^\s*#{1,6}\s.*$/gm, "") // ATX headings
+    .replace(/^\s*[-*_]{3,}\s*$/gm, "") // thematic breaks
     .replace(/<[^>]+>/g, "") // raw html
     .replace(/!\[[^\]]*\]\([^)]*\)/g, "") // images
     .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // links -> text

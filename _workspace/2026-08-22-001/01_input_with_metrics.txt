@@ -1,0 +1,70 @@
+[정량 사전 점수 v2.0 — v1.6 8지표(KatFish baseline) + v2.0 카운트형]
+risk_band: low  (score 2)
+route_hint: light  (권고 — 사용자·오케스트레이터가 무시 가능)
+route_reason: 카운트형 어휘·피동 티 1건 · risk_band low — 이미 잘 쓴 글, 단일 콜·최소 파이프라인 권장
+genre: blog
+char_count: 908
+warning: baseline_genre_null:blog->essay
+
+[v1.6 지표]
+- comma_inclusion_rate: 0.42  (z=+0.92 vs blog 인간 baseline)
+- comma_usage_rate: 0.46  (z=-0.93 vs blog 인간 baseline)
+- ending_comma_rate: 0.15  (z=+1.43 vs blog 인간 baseline)  · S2 시그널
+- comma_segment_length: 6.21  (z=+0.88 vs blog 인간 baseline)
+- conclusion_pivot_count: 0
+- safe_balance_count: 0
+- hanja_nominalizer_density: 0.005  (z=-1.84 vs blog 인간 baseline)
+- lexical_diversity: 0.89  (z=+4.81 vs blog 인간 baseline)  ★ S1 트리거
+
+[v2.0 카운트형 지표 — 원값 / baseline calibration 전 z-score 해석 보류]
+- double_passive_count (이중 피동, 본진 A-8): 0
+- by_passive_count (~에 의해 피동, 본진 A-9): 0
+- pronoun_density (인칭 대명사 밀도, 본진 A-16): 0.025
+- have_make_literal_count (have/make 직역, 본진 A-7): 0
+- double_particle_count (이중 조사 결합, 본진 A-19): 1
+- relative_clause_nesting (관형절 3중+ 중첩 문장 수, 본진 A-18): 1
+- deul_overuse_rate ('-들' 남용률, 본진 A-17 hold): 0.000
+- 카운트 > 0 지표는 해당 본진 ID 처방(quick-rules.md·taxonomy)과 교차 확인 후 윤문할 것.
+
+[근거 사용 가이드]
+- 위 점수는 *근거 보조*다. 단독 판정 금지(보고서 명시).
+- z>1.0 지표는 quick-rules.md S1·S2 패턴과 교차 확인 후 윤문할 것.
+- ending_comma_rate가 ★ S1 트리거인 경우 C-11(연결어미 뒤 쉼표) 우선 손질.
+- conclusion_pivot 매치 토큰은 D-1·H-1 처방 적용 대상.
+
+[원문 시작]
+5년만에 잠들어있던 블로그를 살렸습니다.
+
+요즘은 하루에 20~30개의 이슈를 처리하는 것 같습니다.
+일주일 걸리던 인프라 작업도 1시간만에 뚝딱 끝내버리곤 합니다.
+1년 전만 해도 상상하기 어려운 속도입니다.
+
+1년 전에는 코드는 내가 봐야지, 3달 전에는 코드 아키텍처는 봐야지 하다가
+이제는 IDE 도 안본지가 꽤나 오래된 것 같습니다.
+
+변하는 시대에 적응을 해야지 하다가도, 에이전트를 7-8개씩 돌리다가도
+문득 내가 하는 선택과 결정들이 줄어들고 있다는 생각이 들었습니다.
+어느 순간 "알아서 해" 하고 AI 가 내린 결정조차 보지 않는 시점들이 많아졌습니다.
+
+왜 이 기술을 선택했는지,
+다른 선택지는 무엇이었는지,
+우리 상황에서는 어떤 트레이드오프가 있었는지.
+
+제가 개발을 좋아하는 이유는 문제 해결도 있지만 과정에 있었다는게 불현듯 느껴졌습니다.
+
+AI 가 아니라 어떤 기술이 발전하더라도, 탄탄한 기반은 필요하다고 생각합니다.
+지속 가능한 탄탄한 뼈대를 만들고, 살을 채우면 옷은 언제든 바꿔 입을 수 있으니까요.
+
+다만, 비지니스가 가파르게 성장할 수 있도록
+홈코에서 저는 뼈와 살을 만들면서 동시에 옷을 마구 바꿔입고 있습니다.
+
+너무 재미있는데, 개발자가 한 명이라 저만 알고 있기가 아깝습니다(?)
+
+그래서 5년만에 잠들어있던 블로그를 다시 살렸습니다. (물론 AI 와 함께,,)
+1년이 조금 넘는 시간동안의 홈코에서의 기술적 선택들과 알게된 지식들을 시간이 날 때 틈틈이 정리해 보려고 합니다.
+정리하다 보면 제가 어떤 기준으로 판단하고 무엇을 포기해왔는지도 자연스럽게 드러날 것 같습니다.
+
+읽어보시고 '이렇게 일하는 팀이면 재밌겠다' 싶으신 분이 계시다면,
+메시지도 좋고, 커피 한잔도 좋습니다. 편하게 연락 주세요.
+잘 쓴 채용 공고보다 이 글들이 더 정확한 소개가 될지도 모르겠습니다.
+[원문 끝]

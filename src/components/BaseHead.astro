@@ -127,10 +127,14 @@ const jsonLd =
 />
 <link rel="shortcut icon" href="/img/favicon.png" />
 
-<!-- Fonts -->
-<link rel="preload" href="/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/Inter-Medium.woff2" as="font" type="font/woff2" crossorigin />
-<link rel="preload" href="/fonts/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin />
+<!-- Fonts: Pretendard, as the dynamic subset so a page downloads only the
+     unicode-range chunks its own text needs. The version is pinned so the
+     glyphs cannot shift under an already published post. -->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css"
+/>
 
 <!-- OpenGraph -->
 <meta property="og:site_name" content={SITE.title} />
