@@ -6,6 +6,17 @@
   margin: 20px auto;
 }
 
+/* Raising the body to 17px on a phone costs about a character and a half per
+   line, and at 393px the column was already down to 22 Hangul — the low end of
+   the 20-40 the guidance calls comfortable. Trimming the side padding by 4px
+   hands that back, so the larger type does not buy legibility at the cost of a
+   choppier line. */
+@media (max-width: 684px) {
+  .post {
+    padding: 20px 16px;
+  }
+}
+
 .post:not(:last-of-type) {
   border-bottom: 1px solid var(--border-color);
 }
@@ -162,10 +173,17 @@
   order: -1;
   width: 100%;
   max-width: var(--content-width);
-  /* Matches the article's own 20px side padding and 20px top margin so the
-     rail never sits flush against the header on a phone. */
+  /* Matches the article's own side padding and 20px top margin so the rail
+     never sits flush against the header on a phone, and so the rail label
+     starts at the same x as the post title beneath it. */
   padding: 0 20px;
   margin: 20px 0 10px;
+}
+
+@media (max-width: 684px) {
+  .table-of-contents {
+    padding: 0 16px;
+  }
 }
 
 @media (min-width: 1360px) {
@@ -324,7 +342,7 @@
 
 @media (max-width: 684px) {
   .post.on-list {
-    padding: 22px 20px;
+    padding: 22px 16px;
   }
 }
 
