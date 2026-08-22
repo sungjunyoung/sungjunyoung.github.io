@@ -47,67 +47,46 @@ if (container && !container.querySelector("script")) {
   script.setAttribute("data-emit-metadata", "0");
   script.setAttribute("data-input-position", "bottom");
   // giscus reads `data-theme` once, when client.js runs, so every later change
-  // has to be posted to the frame. `data-loading="lazy"` makes that racy: the
-  // toggle can happen before giscus is listening, and a message sent into a
-  // frame that has not booted is simply lost.
+  // has to be posted into the frame. Two things make that delivery unreliable:
+  // `data-loading="lazy"` means the frame may not have booted when the toggle
+  // happens, and client.js rebuilds the frame from its original `data-theme`
+  // when the widget signs out or clears a bad session.
   //
-  // The iframe element existing is not the signal to wait for — `contentWindow`
-  // is non-null from the moment it is in the DOM, while still on about:blank.
-  // The first message giscus posts back is proof that its own script is running,
-  // so that is what unblocks sending.
-  //
-  // `sentTheme` tracks what the frame is actually showing. client.js rebuilds
-  // the iframe src from its original `data-theme` when the widget signs out or
-  // clears a bad session, so after such a reload the frame reverts to the
-  // page-load theme; resetting `sentTheme` on the frame's `load` makes the next
-  // message from giscus re-apply whatever the page has settled on.
-  let desiredTheme = giscusTheme();
-  const initialTheme = desiredTheme;
-  let sentTheme = desiredTheme;
-  let giscusReady = false;
+  // Rather than tracking which frame is live and whether a message landed, the
+  // page just re-asserts the theme on every message giscus sends. A message is
+  // proof that giscus's own script is running in whatever frame exists at that
+  // moment, which covers the lazy boot and any frame it rebuilds later, and
+  // `setConfig` with the theme already in effect does nothing. Waiting for the
+  // iframe element instead would not work: `contentWindow` is non-null from the
+  // moment it is in the DOM, while still on about:blank.
+  let theme = giscusTheme();
 
-  script.setAttribute("data-theme", desiredTheme);
+  script.setAttribute("data-theme", theme);
   script.setAttribute("data-lang", "ko");
   script.setAttribute("data-loading", "lazy");
   container.appendChild(script);
 
-  const frame = () =>
-    container.querySelector<HTMLIFrameElement>("iframe.giscus-frame");
-
   const sendTheme = () => {
-    if (!giscusReady || sentTheme === desiredTheme) return;
-    const target = frame()?.contentWindow;
-    if (!target) return;
-    target.postMessage(
-      { giscus: { setConfig: { theme: desiredTheme } } },
-      GISCUS_ORIGIN,
-    );
-    sentTheme = desiredTheme;
+    container
+      .querySelector<HTMLIFrameElement>("iframe.giscus-frame")
+      ?.contentWindow?.postMessage(
+        { giscus: { setConfig: { theme } } },
+        GISCUS_ORIGIN,
+      );
   };
 
   const pushTheme = () => {
-    desiredTheme = giscusTheme();
+    theme = giscusTheme();
     sendTheme();
   };
 
   document.addEventListener(THEME_CHANGE_EVENT, pushTheme);
-  // Cross-tab: harmless today, because theme.ts does not restyle this document
-  // when another tab writes `theme`, so currentTheme() here is unchanged and the
-  // push is a no-op. It stays as the hook for when that sync is added.
+  // Cross-tab: a no-op today, because theme.ts does not restyle this document
+  // when another tab writes `theme`, so giscusTheme() is unchanged. It stays as
+  // the hook for when that sync is added.
   window.addEventListener("storage", pushTheme);
 
   window.addEventListener("message", (event) => {
-    if (event.origin !== GISCUS_ORIGIN) return;
-    if (!giscusReady) {
-      giscusReady = true;
-      // client.js can swap the frame's src back to the page-load theme; watch
-      // for that so the next message re-applies the current one.
-      frame()?.addEventListener("load", () => {
-        sentTheme = initialTheme;
-      });
-    }
-    // Flush whatever the page settled on while the frame was still lazy, and
-    // re-apply after a reload. A no-op unless the frame is out of date.
-    sendTheme();
+    if (event.origin === GISCUS_ORIGIN) sendTheme();
   });
 }

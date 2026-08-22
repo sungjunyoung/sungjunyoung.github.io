@@ -10,13 +10,18 @@
 
    Everything above is giscus's stock `dark_dimmed`, vendored rather than
    @import-ed so an upstream edit cannot change this widget without warning.
-   Below, only the tokens that decide surfaces, text, borders and the accent
-   are repointed at src/styles/variables.css so the comment box stops reading
-   as a GitHub panel dropped onto the page.
+   Below, only the tokens that decide surfaces, text and borders are repointed
+   at src/styles/variables.css, so the comment box stops reading as a GitHub
+   panel dropped onto the page.
 
    Primer's dark_dimmed is built on a blue-grey (#22272e / #adbac7); this site
    is a neutral grey (#292a2d / #a9a9b3). That hue difference is what made the
    widget look pasted on.
+
+   Everything a reader acts on keeps GitHub's own colour: the green sign-in
+   button, blue links and author names, the active-tab underline, the reacted
+   pill. Those are controls people already know from GitHub itself, and this
+   site's pink buys tidiness at the cost of that recognition.
    --------------------------------------------------------------------------- */
 main {
   /* surfaces — --background / --background-secondary / --header */
@@ -35,14 +40,7 @@ main {
   --color-border-default: #4a4b50;
   --color-border-muted: #3b3d42;
 
-  /* the site's one accent, --accent. Links and author names pick this up, so
-     it ties the thread to the logo cursor and the table-of-contents marker. */
-  --color-accent-fg: #fe5186;
-  --color-accent-emphasis: #fe5186;
-  --color-accent-muted: #fe518666;
-  --color-accent-subtle: #fe51861a;
-
-  /* buttons: Primer's green reads as a third brand colour next to the pink */
+  /* Neutral buttons only — the green primary button is left to Primer. */
   --color-btn-text: #a9a9b3;
   --color-btn-bg: #35363a;
   --color-btn-border: #4a4b50;
@@ -51,21 +49,10 @@ main {
   --color-btn-active-bg: #35363a;
   --color-btn-active-border: #5a5b61;
   --color-btn-selected-bg: #2f3033;
-  --color-btn-primary-text: #fff;
-  --color-btn-primary-bg: #d8446f;
-  --color-btn-primary-border: #ffffff1a;
-  --color-btn-primary-hover-bg: #fe5186;
-  --color-btn-primary-hover-border: #ffffff1a;
-  --color-btn-primary-selected-bg: #c93c63;
-  --color-btn-primary-disabled-text: #ffffff80;
-  --color-btn-primary-disabled-bg: #d8446f99;
 
-  /* the underline under the active Write/Preview tab */
-  --color-primer-border-active: #fe5186;
-
-  /* reaction pills */
+  /* reaction pill hover — a surface, so it follows the palette; the reacted
+     state keeps Primer's blue. */
   --color-social-reaction-bg-hover: #3b3d42;
-  --color-social-reaction-bg-reacted-hover: #fe518633;
 }
 
 /* The iframe paints its own canvas on top of the page, so letting it stay
