@@ -4,8 +4,10 @@ import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import Comments from '../../components/Comments.astro';
+import ReadingTime from '../../components/ReadingTime.astro';
 import { getPosts, postUrl, type Post } from '../../utils/posts';
 import { excerpt } from '../../utils/excerpt';
+import { readingMinutes } from '../../utils/readingTime';
 import { formatDate, LABELS } from '../../consts';
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -48,6 +50,7 @@ const description = post.data.description ?? excerpt(post.body ?? '');
         <time class="post-date" datetime={post.data.date.toISOString()}>
           {formatDate(post.data.date)}
         </time>
+        <ReadingTime minutes={readingMinutes(post.body ?? '')} />
       </div>
 
       {post.data.tags.length > 0 && (

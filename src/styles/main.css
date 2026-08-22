@@ -109,8 +109,13 @@ b {
   margin-top: 0;
 }
 
+/* The in-body headings step by roughly 1.2 all the way down — 26 / 22 / 18 —
+   and h1 used to sit outside that at 42px, 1.6x its own h2. Continuing the
+   scale instead of jumping past it puts the page title at 32px: still plainly
+   the largest thing on the page, but recognisably the same system as the
+   headings beneath it and as the 24px titles on the index. */
 h1 {
-  font-size: 2.625rem;
+  font-size: 2rem;
 }
 
 h2 {
@@ -131,7 +136,7 @@ h4 {
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   h2 {
@@ -359,6 +364,14 @@ ol ol {
   margin: 50px 0;
 }
 
+/* Centring is what keeps a short page (404, a stub) off the top of the
+   viewport. An index is not short in that sense — it is a list that starts at
+   the top — and once the cards were compact enough that a page of them no
+   longer filled the screen, centring left them floating in the middle. */
+.content:has(.posts) {
+  justify-content: flex-start;
+}
+
 @media (max-width: 684px) {
   .content {
     margin-top: 0;
@@ -374,6 +387,20 @@ hr {
 
 .hidden {
   display: none;
+}
+
+/* Off-screen but still announced — for text that a screen reader needs and a
+   sighted reader already gets from an icon. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 .framed {

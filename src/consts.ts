@@ -23,7 +23,6 @@ export const SITE = {
 export const MENU = [{ name: "About", url: "/about/" }] as const;
 
 export const LABELS = {
-  readMore: "Read More",
   readOtherPosts: "Read other posts",
   newerPosts: "Newer posts",
   olderPosts: "Older posts",

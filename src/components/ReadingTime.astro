@@ -1,0 +1,28 @@
+---
+interface Props {
+  minutes: number;
+}
+
+const { minutes } = Astro.props;
+---
+
+<span class="reading-time">
+  <svg
+    class="reading-time__icon"
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <circle cx="8" cy="8" r="6.25"></circle>
+    <path d="M8 4.3V8l2.6 1.6"></path>
+  </svg>
+  {/* The icon carries the meaning for sighted readers; screen readers get the
+      full phrase instead of a bare number. */}
+  <span aria-hidden="true">{minutes}분</span>
+  <span class="visually-hidden">읽는 데 {minutes}분</span>
+</span>
