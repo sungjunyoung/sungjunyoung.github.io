@@ -1,6 +1,7 @@
 ---
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
 import Footer from '../components/Footer.astro';
 import { SITE } from '../consts';
 import '../styles/global.css';
@@ -52,6 +53,8 @@ const pageTitle = isHome ? SITE.title : `${title} :: ${SITE.title}`;
     <script is:inline>
       document.body.className = document.documentElement.dataset.initialTheme;
     </script>
+    <ReadingProgress />
+
     <div class="container">
       <Header />
 
@@ -68,6 +71,7 @@ const pageTitle = isHome ? SITE.title : `${title} :: ${SITE.title}`;
       import '../scripts/code-copy';
       import '../scripts/heading-anchors';
       import '../scripts/toc';
+      import '../scripts/reading-progress';
       import '../scripts/comments';
       import '../scripts/mixpanel';
     </script>
