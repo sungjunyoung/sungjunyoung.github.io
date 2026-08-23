@@ -1,0 +1,134 @@
+/* Click-to-enlarge for post diagrams — see src/scripts/lightbox.ts.
+   The dialog is created on first use, so none of this applies until a reader
+   actually opens an image. */
+
+.post-content img.zoomable {
+  cursor: zoom-in;
+}
+
+.post-content img.zoomable:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.lightbox {
+  /* The dialog is the viewport: `max-width`/`max-height` and the centring
+     margins a UA stylesheet gives <dialog> are all replaced here. */
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  /* Not `display: flex` — that would make the dialog visible while closed,
+     since [open] is what the UA toggles display on. */
+  overflow: hidden;
+  cursor: zoom-out;
+}
+
+.lightbox[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox::backdrop {
+  /* Dark in both themes: the point is to take the page away, and a light
+     scrim behind a line drawing leaves the drawing competing with the page. */
+  background: rgba(0, 0, 0, 0.82);
+}
+
+.lightbox__image {
+  /* Width is asked for rather than capped, so a drawing smaller than the
+     viewport still grows to fill it. `--lightbox-cap` is set per image by
+     lightbox.ts and is what stops the upscale short of unreadable.
+     `height: auto` under a max-height keeps the aspect ratio: the browser
+     re-derives the width when the height clamps. */
+  width: min(calc(100vw - 48px), var(--lightbox-cap, 100vw));
+  height: auto;
+  max-height: calc(100dvh - 48px);
+  object-fit: contain;
+  /* Diagrams are line art on white; without this they float on the scrim with
+     no edge. */
+  border-radius: 4px;
+  background: #fff;
+}
+
+/* --- close button --------------------------------------------------------- */
+
+.lightbox__close {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.lightbox__close::before,
+.lightbox__close::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.lightbox__close::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.lightbox__close::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.lightbox__close:hover,
+.lightbox__close:focus-visible {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+.lightbox__close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* --- opening ------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .lightbox[open] {
+    animation: lightbox-in 0.18s ease-out;
+  }
+
+  .lightbox[open]::backdrop {
+    animation: lightbox-backdrop-in 0.18s ease-out;
+  }
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+@keyframes lightbox-backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media print {
+  .lightbox {
+    display: none;
+  }
+}

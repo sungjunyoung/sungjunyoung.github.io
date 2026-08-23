@@ -1,0 +1,104 @@
+/* Callouts, written as GitHub alerts (`> [!NOTE]`) — see
+   src/markdown/callouts.ts for how the blockquote becomes this markup.
+
+   One accent colour drives the whole block: the rule down the left, the icon,
+   and the tinted ground, which is mixed from the accent and whatever the page
+   background currently is. That mix is why the surface follows the theme
+   without a second set of values — the accent itself is the only thing that
+   has to be stated twice. */
+
+body.light-theme,
+:root {
+  --callout-note: #0969da;
+  --callout-tip: #1a7f37;
+  --callout-important: #8250df;
+  --callout-warning: #9a6700;
+  --callout-caution: #cf222e;
+}
+
+/* The light values are chosen against white and go muddy on #292a2d, so the
+   dark theme lifts each one to the same hue at a higher lightness. */
+body.dark-theme {
+  --callout-note: #4493f8;
+  --callout-tip: #3fb950;
+  --callout-important: #ab7df8;
+  --callout-warning: #d29922;
+  --callout-caution: #f85149;
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light-theme) {
+    --callout-note: #4493f8;
+    --callout-tip: #3fb950;
+    --callout-important: #ab7df8;
+    --callout-warning: #d29922;
+    --callout-caution: #f85149;
+  }
+}
+
+.callout {
+  margin: 24px 0;
+  padding: 14px 18px;
+  border-left: 3px solid var(--callout-accent);
+  border-radius: 0 4px 4px 0;
+  background: color-mix(in oklab, var(--callout-accent) 7%, var(--background));
+  /* A callout that opens with a list or a code block would otherwise start
+     with the child's own top margin stacked on the padding. */
+  overflow: hidden;
+}
+
+.callout > :first-child {
+  margin-top: 0;
+}
+
+.callout > :last-child {
+  margin-bottom: 0;
+}
+
+.callout__label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 6px;
+  color: var(--callout-accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Drawn as a mask rather than an inline <img>, so the glyph takes the
+   callout's accent colour in both themes from one declaration. */
+.callout__label::before {
+  content: "";
+  flex: none;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask: var(--callout-icon) center / 16px 16px no-repeat;
+  mask: var(--callout-icon) center / 16px 16px no-repeat;
+}
+
+.callout--note {
+  --callout-accent: var(--callout-note);
+  --callout-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 0a8 8 0 100 16A8 8 0 008 0zm0 1.5a6.5 6.5 0 110 13 6.5 6.5 0 010-13zm.75 9.75h-1.5v-5h1.5v5zM8 5.4a.95.95 0 110-1.9.95.95 0 010 1.9z'/%3E%3C/svg%3E");
+}
+
+.callout--tip {
+  --callout-accent: var(--callout-tip);
+  --callout-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8 1a4.5 4.5 0 00-2.7 8.1c.4.3.65.75.72 1.2l.08.7h3.8l.08-.7c.07-.45.32-.9.72-1.2A4.5 4.5 0 008 1zm0 1.5a3 3 0 011.8 5.4c-.5.38-.87.9-1.06 1.6H7.26c-.19-.7-.56-1.22-1.06-1.6A3 3 0 018 2.5zM6.25 12h3.5v1.25h-3.5V12zm.6 2.25h2.3l-.6.75H7.45l-.6-.75z'/%3E%3C/svg%3E");
+}
+
+.callout--important {
+  --callout-accent: var(--callout-important);
+  --callout-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 2.75C2 1.784 2.784 1 3.75 1h8.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0112.25 12H8.06l-2.53 2.53A.75.75 0 014.25 14v-2h-.5A1.75 1.75 0 012 10.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h1.25a.75.75 0 01.75.75v.94l1.47-1.47a.75.75 0 01.53-.22h4.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-8.5zM8.75 4v4h-1.5V4h1.5zm0 5.25v1.5h-1.5v-1.5h1.5z'/%3E%3C/svg%3E");
+}
+
+.callout--warning {
+  --callout-accent: var(--callout-warning);
+  --callout-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M6.7 1.6a1.5 1.5 0 012.6 0l5.4 9.4a1.5 1.5 0 01-1.3 2.25H2.6A1.5 1.5 0 011.3 11l5.4-9.4zm1.3.7a.1.1 0 00-.09.05L2.51 11.75a.1.1 0 00.09.15h10.8a.1.1 0 00.09-.15L8.09 2.35A.1.1 0 008 2.3zm.75 3.2v3.5h-1.5V5.5h1.5zm0 4.75v1.5h-1.5v-1.5h1.5z'/%3E%3C/svg%3E");
+}
+
+.callout--caution {
+  --callout-accent: var(--callout-caution);
+  --callout-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.88.75h6.24l4.13 4.13v6.24l-4.13 4.13H4.88L.75 11.12V4.88L4.88.75zm.62 1.5L2.25 5.5v5l3.25 3.25h5l3.25-3.25v-5L10.5 2.25h-5zm3.25 2.25v4.25h-1.5V4.5h1.5zm0 5.5v1.5h-1.5V10h1.5z'/%3E%3C/svg%3E");
+}

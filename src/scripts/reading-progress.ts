@@ -1,11 +1,17 @@
 // Fills the bar at the top of the viewport in step with how much of the
 // article has been scrolled past. Measured against the article itself, not the
 // document: the header, the pager and the comment box are not reading.
-const container = document.querySelector<HTMLElement>(".reading-progress");
-const bar = container?.querySelector<HTMLElement>(".reading-progress__bar");
-const content = document.querySelector<HTMLElement>(".post .post-content");
+export function initReadingProgress(signal: AbortSignal) {
+  const container = document.querySelector<HTMLElement>(".reading-progress");
+  const bar = container?.querySelector<HTMLElement>(".reading-progress__bar");
+  const content = document.querySelector<HTMLElement>(".post .post-content");
 
-if (container && bar && content) {
+  if (!container || !bar || !content) {
+    // Nothing to measure on this page — a list or an error page.
+    container?.remove();
+    return;
+  }
+
   // Distance from the top of the document, which offsetTop alone does not give
   // once the element sits inside a positioned ancestor.
   const documentTop = (element: HTMLElement) =>
@@ -37,6 +43,8 @@ if (container && bar && content) {
     queued = true;
     requestAnimationFrame(() => {
       queued = false;
+      // A view transition may have swapped this bar out before the frame ran.
+      if (signal.aborted) return;
       update();
     });
   };
@@ -48,12 +56,13 @@ if (container && bar && content) {
 
   measure();
   update();
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onResize);
+  window.addEventListener("scroll", onScroll, { passive: true, signal });
+  window.addEventListener("resize", onResize, { signal });
   // Images, embedded code blocks and the comment iframe all land after first
   // paint and move the article's bottom edge with them.
-  new ResizeObserver(onResize).observe(content);
-} else {
-  // Nothing to measure on this page — a list or an error page.
-  container?.remove();
+  const observer = new ResizeObserver(onResize);
+  observer.observe(content);
+  // A ResizeObserver holds its target alive and takes no signal of its own, so
+  // it is the one thing here that has to be torn down by hand.
+  signal.addEventListener("abort", () => observer.disconnect(), { once: true });
 }

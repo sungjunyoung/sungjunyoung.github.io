@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
@@ -36,6 +37,11 @@ const pageTitle = isHome ? SITE.title : `${title} :: ${SITE.title}`;
       image={image}
       noindex={noindex}
     />
+    <!-- Swaps the document instead of reloading it, and turns on link
+         prefetching in the same move. src/scripts/page.ts is what keeps the
+         widgets bound across a swap; nothing on the page may rely on a module
+         body running once per navigation. -->
+    <ClientRouter />
     <script is:inline>
       // Apply the stored theme before first paint so the page never flashes.
       (function () {
@@ -66,14 +72,7 @@ const pageTitle = isHome ? SITE.title : `${title} :: ${SITE.title}`;
     </div>
 
     <script>
-      import '../scripts/theme';
-      import '../scripts/menu';
-      import '../scripts/code-copy';
-      import '../scripts/heading-anchors';
-      import '../scripts/toc';
-      import '../scripts/reading-progress';
-      import '../scripts/comments';
-      import '../scripts/mixpanel';
+      import '../scripts/page';
     </script>
   </body>
 </html>
