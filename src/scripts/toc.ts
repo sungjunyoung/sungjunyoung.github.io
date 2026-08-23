@@ -1,7 +1,9 @@
 // Highlights the table-of-contents entry for the heading currently in view.
 // The active entry is marked with a class; the border comes from CSS.
-const toc = document.querySelector<HTMLElement>(".table-of-contents");
-if (toc) {
+export function initToc(signal: AbortSignal) {
+  const toc = document.querySelector<HTMLElement>(".table-of-contents");
+  if (!toc) return;
+
   const links = [...toc.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')];
 
   const targets = links
@@ -15,64 +17,64 @@ if (toc) {
         entry !== null,
     );
 
-  if (targets.length > 0) {
-    // A heading counts as "current" once it has passed this line near the top
-    // of the viewport, so the highlight tracks what the reader is looking at.
-    const ACTIVATION_LINE = 120;
+  if (targets.length === 0) return;
 
-    let active: HTMLAnchorElement | null = null;
+  // A heading counts as "current" once it has passed this line near the top
+  // of the viewport, so the highlight tracks what the reader is looking at.
+  const ACTIVATION_LINE = 120;
 
-    const update = () => {
-      let current = targets[0]!;
-      for (const entry of targets) {
-        if (entry.heading.getBoundingClientRect().top <= ACTIVATION_LINE) {
-          current = entry;
-        } else {
-          break;
-        }
+  let active: HTMLAnchorElement | null = null;
+
+  const update = () => {
+    let current = targets[0]!;
+    for (const entry of targets) {
+      if (entry.heading.getBoundingClientRect().top <= ACTIVATION_LINE) {
+        current = entry;
+      } else {
+        break;
       }
+    }
 
-      // Once the page is scrolled to the bottom the last heading is the target,
-      // even if it never crossed the activation line on a short final section.
+    // Once the page is scrolled to the bottom the last heading is the target,
+    // even if it never crossed the activation line on a short final section.
+    if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 2) {
+      current = targets[targets.length - 1]!;
+    }
+
+    if (current.link === active) return;
+    active?.classList.remove("active");
+    current.link.classList.add("active");
+    active = current.link;
+
+    // Keep the highlight visible when the TOC itself has to scroll.
+    if (toc.scrollHeight > toc.clientHeight) {
+      const linkTop = current.link.offsetTop - toc.offsetTop;
       if (
-        window.innerHeight + window.scrollY >=
-        document.body.scrollHeight - 2
+        linkTop < toc.scrollTop ||
+        linkTop > toc.scrollTop + toc.clientHeight - 40
       ) {
-        current = targets[targets.length - 1]!;
+        toc.scrollTo({
+          top: linkTop - toc.clientHeight / 2,
+          behavior: "smooth",
+        });
       }
+    }
+  };
 
-      if (current.link === active) return;
-      active?.classList.remove("active");
-      current.link.classList.add("active");
-      active = current.link;
+  let queued = false;
+  const onScroll = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      // The frame can land after a view transition has swapped this rail out,
+      // at which point `targets` points at headings no longer in the document.
+      if (signal.aborted) return;
+      update();
+    });
+  };
 
-      // Keep the highlight visible when the TOC itself has to scroll.
-      if (toc.scrollHeight > toc.clientHeight) {
-        const linkTop = current.link.offsetTop - toc.offsetTop;
-        if (
-          linkTop < toc.scrollTop ||
-          linkTop > toc.scrollTop + toc.clientHeight - 40
-        ) {
-          toc.scrollTo({
-            top: linkTop - toc.clientHeight / 2,
-            behavior: "smooth",
-          });
-        }
-      }
-    };
-
-    let queued = false;
-    const onScroll = () => {
-      if (queued) return;
-      queued = true;
-      requestAnimationFrame(() => {
-        queued = false;
-        update();
-      });
-    };
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-  }
+  update();
+  window.addEventListener("scroll", onScroll, { passive: true, signal });
+  window.addEventListener("resize", onScroll, { signal });
 }

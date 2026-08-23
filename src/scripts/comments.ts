@@ -24,9 +24,12 @@ const giscusTheme = () => {
   return window.location.origin === SITE.url ? DARK_THEME_URL : "dark_dimmed";
 };
 
-const container = document.querySelector<HTMLElement>(".comments");
+export function initComments(signal: AbortSignal) {
+  const container = document.querySelector<HTMLElement>(".comments");
+  // A view transition brings in an empty container, so the check is against
+  // this page's own markup rather than a module-level "already ran" flag.
+  if (!container || container.querySelector("script")) return;
 
-if (container && !container.querySelector("script")) {
   const { giscusRepo, giscusRepoId, giscusCategory, giscusCategoryId } =
     container.dataset;
 
@@ -80,13 +83,20 @@ if (container && !container.querySelector("script")) {
     sendTheme();
   };
 
-  document.addEventListener(THEME_CHANGE_EVENT, pushTheme);
+  // These three sit on document and window, which survive a view transition,
+  // so they are bound to the page's signal — otherwise every post visited in a
+  // session would leave another pair of handlers posting into a dead frame.
+  document.addEventListener(THEME_CHANGE_EVENT, pushTheme, { signal });
   // Cross-tab: a no-op today, because theme.ts does not restyle this document
   // when another tab writes `theme`, so giscusTheme() is unchanged. It stays as
   // the hook for when that sync is added.
-  window.addEventListener("storage", pushTheme);
+  window.addEventListener("storage", pushTheme, { signal });
 
-  window.addEventListener("message", (event) => {
-    if (event.origin === GISCUS_ORIGIN) sendTheme();
-  });
+  window.addEventListener(
+    "message",
+    (event) => {
+      if (event.origin === GISCUS_ORIGIN) sendTheme();
+    },
+    { signal },
+  );
 }
