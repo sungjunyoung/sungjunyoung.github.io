@@ -1,0 +1,31 @@
+/* Reading progress indicator, pinned above the header on every viewport.
+   The track stays transparent so the bar reads as a thin line over the page
+   rather than a strip of chrome. */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* Thin enough to stay out of the way, thick enough to see on a phone at
+     arm's length. */
+  height: 3px;
+  /* Above the header and the mobile menu, below nothing else on the page. */
+  z-index: 100;
+  pointer-events: none;
+}
+
+.reading-progress__bar {
+  height: 100%;
+  background: var(--accent);
+  /* Scaled rather than resized so the browser can keep the whole update on
+     the compositor while scrolling. */
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  will-change: transform;
+}
+
+@media print {
+  .reading-progress {
+    display: none;
+  }
+}
