@@ -16,6 +16,7 @@ import { initCodeCopy } from "./code-copy";
 import { initHeadingAnchors } from "./heading-anchors";
 import { initToc } from "./toc";
 import { initReadingProgress } from "./reading-progress";
+import { initLightbox } from "./lightbox";
 import { initComments } from "./comments";
 import "./mixpanel";
 
@@ -37,6 +38,7 @@ const INITS: PageInit[] = [
   initHeadingAnchors,
   initToc,
   initReadingProgress,
+  initLightbox,
   initComments,
 ];
 

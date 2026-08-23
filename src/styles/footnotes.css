@@ -1,0 +1,96 @@
+/* GFM footnotes. Sätteri parses `[^1]` already and emits remark-rehype's
+   markup — a `<sup>` reference in the prose and a `<section data-footnotes>`
+   holding the definitions. Only the styling lives here. */
+
+/* The generated section heading carries this class and nothing else on the
+   site uses it, so it is defined where it is needed. Clipped rather than
+   `display: none`, which would take it out of the accessibility tree — the
+   `aria-describedby` on every reference points at this element. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- the reference in the prose ------------------------------------------ */
+
+.post-content sup:has(> a[data-footnote-ref]) {
+  /* Superscript on a line of Hangul otherwise stretches the line box and
+     opens a visible gap above the paragraph it sits in. */
+  line-height: 0;
+  font-size: 0.75em;
+  margin-left: 1px;
+}
+
+.post-content a[data-footnote-ref] {
+  padding: 0 3px;
+  border-radius: 3px;
+  color: var(--accent);
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+  /* Digits set in the body face at 0.75em are a small target; the padding and
+     the hover ground are what make the number feel like a link. */
+  transition: background-color 0.15s ease;
+}
+
+.post-content a[data-footnote-ref]:hover,
+.post-content a[data-footnote-ref]:focus-visible {
+  background: var(--background-secondary);
+}
+
+/* The jump target, so a footnote landed on from the prose is not flush with
+   the top of the viewport under the fixed progress bar. */
+.post-content [id^="user-content-fn"] {
+  scroll-margin-top: 24px;
+}
+
+/* --- the list at the foot of the article --------------------------------- */
+
+.footnotes {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color);
+  color: var(--color-secondary);
+  font-size: 0.9375rem;
+}
+
+.footnotes ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.footnotes li {
+  margin: 0 0 10px;
+}
+
+.footnotes li p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.footnotes li:target {
+  /* Marks which note the reader just jumped to; the rule is on the left so it
+     does not move the text. */
+  box-shadow: -12px 0 0 -10px var(--accent);
+}
+
+.footnotes a.data-footnote-backref {
+  margin-left: 4px;
+  color: var(--accent);
+  text-decoration: none;
+  /* The arrow is the only ASCII in an otherwise Hangul line and sits low in
+     the Pretendard fallback, so it is nudged onto the same optical baseline. */
+  font-size: 0.875em;
+}
+
+.footnotes a.data-footnote-backref:hover,
+.footnotes a.data-footnote-backref:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

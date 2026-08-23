@@ -6,6 +6,7 @@ import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
 import { gemojiPlugin } from "./src/markdown/gemoji";
 import { figuresPlugin } from "./src/markdown/figures";
+import { calloutsPlugin } from "./src/markdown/callouts";
 
 const SITE_URL = "https://blog.sungjunyoung.dev";
 const POSTS_DIR = new URL("./src/content/posts/", import.meta.url);
@@ -72,7 +73,20 @@ export default defineConfig({
     // keeping Prism lets src/styles/prism.css apply verbatim.
     syntaxHighlight: "prism",
     processor: satteri({
-      mdastPlugins: [gemojiPlugin],
+      features: {
+        // Sätteri parses GFM footnotes already; this only localises the
+        // strings it generates around them. The section heading is visually
+        // hidden, so "각주" is what a screen reader announces before the list
+        // and the backrefs say where they go back to.
+        gfm: {
+          footnotes: {
+            label: "각주",
+            backContent: "↩",
+            backLabel: "본문 {reference}로 돌아가기",
+          },
+        },
+      },
+      mdastPlugins: [gemojiPlugin, calloutsPlugin],
       hastPlugins: [figuresPlugin],
     }),
   },
