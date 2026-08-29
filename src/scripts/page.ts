@@ -11,8 +11,8 @@
 // is replaced — so registering them with `{ signal }` is what keeps a five-page
 // visit from ending with five scroll handlers on the same window.
 import { initTheme, restoreTheme } from "./theme";
-import { initMenu } from "./menu";
 import { initCodeCopy } from "./code-copy";
+import { initPostActions } from "./post-actions";
 import { initHeadingAnchors } from "./heading-anchors";
 import { initToc } from "./toc";
 import { initReadingProgress } from "./reading-progress";
@@ -33,8 +33,8 @@ type PageInit = (signal: AbortSignal) => void;
 
 const INITS: PageInit[] = [
   initTheme,
-  initMenu,
   initCodeCopy,
+  initPostActions,
   initHeadingAnchors,
   initToc,
   initReadingProgress,
@@ -61,7 +61,7 @@ document.addEventListener("astro:page-load", () => {
   for (const init of INITS) {
     // One widget failing is not a reason for the rest of the page to stay
     // inert — without this, a throw in the first initialiser would leave the
-    // menu, the copy buttons and the comments unbound.
+    // copy buttons and the comments unbound.
     try {
       init(signal);
     } catch (error) {

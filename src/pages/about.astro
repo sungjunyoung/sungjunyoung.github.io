@@ -1,0 +1,283 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { formatDate } from '../consts';
+import profile from '../assets/img/profile.jpg';
+import '../styles/about.css';
+
+// This page was Markdown until the sections needed to sit two to a row. A
+// `---`-separated document is a flat list of siblings — hr, h2, p, hr, h2, p —
+// with no element to hang a grid cell on, and Presentations and Awards run to a
+// different number of blocks each, so there was nothing stable to select. The
+// content is the same; only its shape is now the page's to decide.
+
+const PAGE = {
+  title: 'About',
+  date: new Date('2026-08-22'),
+  author: 'Junyoung, Sung',
+  tagline: 'Cloud Native',
+};
+
+const CONTACT = [
+  {
+    label: 'Email',
+    links: [
+      { text: 'wnsdud1861@gmail.com', href: 'mailto:wnsdud1861@gmail.com' },
+      { text: 'junyoung.sung@homeco.kr', href: 'mailto:junyoung.sung@homeco.kr' },
+    ],
+  },
+  {
+    label: 'LinkedIn',
+    links: [
+      {
+        text: 'https://www.linkedin.com/in/junyoung-sung-986412121/',
+        href: 'https://www.linkedin.com/in/junyoung-sung-986412121/',
+      },
+    ],
+  },
+];
+
+const CHANNEL = [
+  {
+    label: 'Github',
+    links: [{ text: 'https://github.com/sungjunyoung', href: 'https://github.com/sungjunyoung' }],
+  },
+];
+
+const CAREER = [
+  { period: '2025.05 ~', org: '홈앤코', href: 'https://homeco.kr', role: 'Lead Engineer' },
+  {
+    period: '2022.03 ~ 2025.05',
+    org: 'Viva Republica (Toss)',
+    href: 'https://toss.im',
+    role: 'DevOps Engineer',
+  },
+  {
+    period: '2021.08 ~ 2022.03',
+    org: 'NAVER LABS',
+    href: 'https://www.naverlabs.com/',
+    role: 'Software & DevOps Engineer',
+  },
+  {
+    period: '2018.06 ~ 2021.07',
+    org: 'NAVER',
+    href: 'https://www.navercorp.com/',
+    role: 'Platform & DevOps Engineer',
+  },
+  {
+    period: '2017.12 ~ 2018.06',
+    org: 'NAVER',
+    href: 'https://www.navercorp.com/',
+    role: 'Platform Development Intern',
+  },
+  {
+    period: '2016.08 ~ 2017.03',
+    org: 'Nomadstar',
+    href: 'https://nomadstar.com/',
+    role: 'Server Development Intern',
+  },
+];
+
+const PRESENTATIONS = [
+  {
+    when: '2023.06.08',
+    where: 'SLASH 23',
+    talks: [
+      {
+        text: '고객 불안을 0으로 만드는 토스의 Istio Zero Trust',
+        href: 'https://youtu.be/4sJd6PIkP_s?t=1',
+      },
+    ],
+  },
+  {
+    when: '2021.10.21',
+    where: 'Ceph Korea Community',
+    talks: [
+      {
+        text: 'Journey for Provisioning 20k over Rbd Volumes to Kubernetes with Openstack',
+        href: 'https://www.slideshare.net/SungJunyoung/journey-for-provisioning-20k-over-rbd-volumes-to-kubernetes-with-openstack',
+      },
+    ],
+  },
+];
+
+const AWARDS = [
+  {
+    when: '2017.12.31',
+    where: 'SW Maestro 8th',
+    prize: 'Authenticator',
+    notes: [
+      [{ text: 'Font generating service based on deep-learning - Fontto' }],
+      [{ text: 'python, deep learning, meteor, react' }],
+    ],
+  },
+  {
+    when: '2017.11.04',
+    where: 'Digital solution Challenge',
+    prize: 'Computer Information Society President Award',
+    notes: [
+      [{ text: 'Machine Learning-based lost child finding service' }],
+      [{ text: 'python, data crawling' }],
+    ],
+  },
+  {
+    when: '2017.09.15',
+    where: 'Opensource hackerthon, OpenHack',
+    prize: 'Minister of Science and ICT Award',
+    notes: [
+      [
+        { text: 'URL sharing service only for developers ' },
+        { text: 'Forkrain', href: 'https://www.slideshare.net/SungJunyoung/forkrain-ppt' },
+      ],
+      [{ text: 'nodejs, express, github sdk' }],
+    ],
+  },
+  {
+    when: '2016.10.10',
+    where: 'Kyunghee Univ. Khuthon',
+    prize: '1st Award',
+    notes: [
+      [{ text: 'Chatting service only for people who taking actual lectures' }],
+      [{ text: 'android, express, nodejs, firebase' }],
+    ],
+  },
+  {
+    when: '2016.07.08',
+    where: 'Philips Hue Day',
+    prize: '2nd Award',
+    notes: [
+      [{ text: 'Huestagram', href: 'https://www.slideshare.net/SungJunyoung/ss-63682747' }],
+      [{ text: 'swift, ios, instagram sdk, hue sdk' }],
+    ],
+  },
+  {
+    when: '2016.03.26',
+    where: 'SKT App Jam',
+    prize: 'Encouragement Award',
+    notes: [
+      [{ text: 'WebRTC android communication application' }],
+      [{ text: 'android, webrtc' }],
+    ],
+  },
+  {
+    when: '2013.12.15',
+    where: 'Born to global Hackathon',
+    prize: 'Special Award',
+    notes: [
+      [{ text: 'Interest-based user connection facebook chatbot service' }],
+      [{ text: 'python, facebook sdk' }],
+    ],
+  },
+];
+---
+
+<Base title={PAGE.title}>
+  <div class="about">
+    {/* The lead reads like the index's lead card: it takes the full band on its
+        own, and the rule under it opens the two-column part of the page. */}
+    <section class="about__lead">
+      <h1 class="post-title">{PAGE.title}</h1>
+      <div class="post-meta">
+        <time datetime={PAGE.date.toISOString()}>{formatDate(PAGE.date)}</time>
+        <span class="post-author">— Written by {PAGE.author}</span>
+      </div>
+
+      <Image class="about__portrait" src={profile} alt={PAGE.author} width={200} height={200} />
+      <p class="about__tagline">❤️ {PAGE.tagline}</p>
+    </section>
+
+    <div class="about__row">
+      <section class="about__section">
+        <h2>📧 Contact</h2>
+        <dl class="about__pairs">
+          {CONTACT.map((row) => (
+            <>
+              <dt>{row.label}</dt>
+              <dd>
+                {row.links.map((link, i) => (
+                  <>
+                    {i > 0 && ' / '}
+                    <a href={link.href}>{link.text}</a>
+                  </>
+                ))}
+              </dd>
+            </>
+          ))}
+        </dl>
+      </section>
+
+      <section class="about__section">
+        <h2>🔗 Channel</h2>
+        <dl class="about__pairs">
+          {CHANNEL.map((row) => (
+            <>
+              <dt>{row.label}</dt>
+              <dd>
+                {row.links.map((link) => <a href={link.href}>{link.text}</a>)}
+              </dd>
+            </>
+          ))}
+        </dl>
+      </section>
+    </div>
+
+    <div class="about__row">
+      <section class="about__section">
+        <h2>🐜 Career</h2>
+        <ul class="about__list">
+          {CAREER.map((job) => (
+            <li>
+              <span class="about__when">{job.period}</span>
+              <span class="about__what">
+                <a href={job.href}>{job.org}</a> : {job.role}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="about__section">
+        <h2>📺 Presentations</h2>
+        <ul class="about__list">
+          {PRESENTATIONS.map((item) => (
+            <li>
+              <span class="about__when">{item.when}</span>
+              <span class="about__what">
+                {item.where}
+                {item.talks.map((talk) => (
+                  <a class="about__talk" href={talk.href}>{talk.text}</a>
+                ))}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+
+    <section class="about__section about__section--full">
+      <h2>🎉 Awards</h2>
+      {/* Seven entries down a 1140px band would run the page on for another
+          screen and a half, so they take the same two tracks the sections above
+          them do. */}
+      <ul class="about__list about__list--split">
+        {AWARDS.map((award) => (
+          <li>
+            <span class="about__when">{award.when}</span>
+            <span class="about__what">
+              {award.where} : {award.prize}
+              <span class="about__notes">
+                {award.notes.map((note) => (
+                  <span class="about__note">
+                    {note.map((part) =>
+                      part.href ? <a href={part.href}>{part.text}</a> : part.text,
+                    )}
+                  </span>
+                ))}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</Base>

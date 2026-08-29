@@ -17,10 +17,6 @@
   }
 }
 
-.post:not(:last-of-type) {
-  border-bottom: 1px solid var(--border-color);
-}
-
 /* Date, reading time and tags sit on one row rather than stacking, so the
    metadata costs a single line instead of three. */
 .post-meta {
@@ -52,27 +48,19 @@
   text-decoration: none;
 }
 
+/* Tags are the one thing in the furniture around a post that is genuinely a
+   set of links, so they are the thing that gets the pill. */
 .post-tags {
-  display: block;
-  margin-bottom: 20px;
-  font-size: 1rem;
-  opacity: 0.5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
 .post-tags a {
-  text-decoration: none;
-}
-
-/* --- reading time badge --------------------------------------------------- */
-
-/* Estimated from the post body — see src/utils/readingTime.ts. The clock is
-   what makes the bare number readable at a glance; the pill keeps it from
-   being mistaken for part of the date beside it. */
-.reading-time {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 2px 9px 3px;
+  padding: 3px 11px 4px;
   border-radius: 999px;
   background: var(--background-secondary);
   /* Not --color-secondary: against --background-secondary the two greys are
@@ -81,6 +69,28 @@
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s ease;
+}
+
+.post-tags a:hover,
+.post-tags a:focus-visible {
+  color: var(--color-strong);
+}
+
+/* --- reading time ---------------------------------------------------------- */
+
+/* Estimated from the post body — see src/utils/readingTime.ts. It used to be
+   set in a pill, which made a piece of incidental metadata the loudest thing
+   on the row and read as something you could press. The clock alone is enough
+   to keep the number from being mistaken for part of the date beside it, so
+   the badge treatment now belongs to the tags, which really are links. */
+.reading-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: inherit;
   white-space: nowrap;
 }
 
@@ -94,50 +104,78 @@
   margin-top: 30px;
 }
 
+/* Above the article's first heading, at the width of the text under it. Both
+   plates are drawn on their theme's own --background, so no shadow and no
+   border: the artwork reads as sitting on the page rather than on a card. */
 .post-cover {
-  margin: 40px -50px;
-  width: 860px;
-  max-width: 860px;
+  margin: 26px 0 6px;
 }
 
 .post-cover img {
-  margin: 0 auto;
-  border-radius: 8px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  border-radius: 10px;
 }
 
-@media (max-width: 900px) {
-  .post-cover {
-    margin: 20px 0;
-    width: 100%;
-  }
+/* --- themed plates -------------------------------------------------------- */
+
+/* Only the pair swaps. A cover with no dark twin is one image that stays put. */
+.cover,
+.cover__plate {
+  display: block;
+}
+
+.cover--themed .cover__plate--dark {
+  display: none;
+}
+
+body.dark-theme .cover--themed .cover__plate--light {
+  display: none;
+}
+
+body.dark-theme .cover--themed .cover__plate--dark {
+  display: block;
 }
 
 /* ---------------------------------------------------------------------------
    Post + table of contents layout
 
-   The two outer grid tracks are always the same size, so the 800px article
-   stays centred on the viewport and its 760px text column keeps lining up with
-   the 760px header and footer — on every page, with or without a TOC.
+   The grid is capped at the page band — the same width as the header, the
+   footer and the index — so an article page is not quietly 300px wider than
+   every other page on the site. Inside it the two side tracks are equal, which
+   is what keeps the article centred; the contents rail takes whatever the
+   right-hand one gives it, and the left one holds the share buttons.
 
-   Capping those tracks at 320px stops the rail from drifting toward the screen
-   edge on wide monitors: past 1440px the whole grid centres instead of the
-   tracks growing. Within its track the rail is centred too, so it reads as a
-   margin note with air on both sides rather than something falling off the
-   right edge.
+   The band is a fixed budget, so the article's width and the rail's are one
+   decision, not two. A 1140px band could not pay for both — at 800px of
+   article the rails came out 170px, and a contents entry like "idea II: Limit
+   threads accessing runqueue" broke over three lines in that. Widening the
+   band to 1320 buys both: the article keeps its 800px, and 240px is more room
+   than the rail has ever had.
+
+   The gap is part of that budget rather than something the rail is left to
+   find on its own. Sitting flush against the track boundary, the contents list
+   came within 20px of the last word of a line — close enough to read as a
+   second column of the article. 40px on each side of the article puts 60px
+   between the text and the rail, counting the article's own padding.
+
+   --toc-width is a cap rather than a width, so the rail also degrades: the
+   tracks are `1fr`, so between the breakpoint and 1360px of viewport they
+   narrow with the band instead of the layout snapping back to one column.
    --------------------------------------------------------------------------- */
 
 :root {
   --content-width: 800px;
-  --gutter-max: 320px;
-  --toc-width: 220px;
+  --layout-gap: 40px;
+  /* 1280 (the band's content box) - 800 (the article) - 80 (two gaps) = 400,
+     split evenly between the two rails. */
+  --toc-width: 200px;
 }
 
 /* The article and the rail have to be the same box, or the rail label and the
    post title start at different x. They used to carry separate width rules on
    opposite sides of the same 900px breakpoint — the article narrowed at 900
-   and below, the rail at 900 and above — so below 1360px they were never
-   actually the same width. One token, read by both, cannot drift again. */
+   and below, the rail at 900 and above — so below the desktop breakpoint
+   they were never actually the same width. One token, read by both, cannot drift again. */
 @media (max-width: 900px) {
   :root {
     --content-width: 660px;
@@ -151,19 +189,56 @@
   width: 100%;
 }
 
-@media (min-width: 1360px) {
+/* Below 1260px the two rails come out under ~170px each, which is narrower
+   than a contents entry can usefully be, so the layout falls back to the
+   stacked flex column above rather than shipping a rail too thin to read. */
+@media (min-width: 1260px) {
   .post-layout {
     display: grid;
     grid-template-columns:
-      minmax(0, var(--gutter-max))
+      minmax(0, 1fr)
       var(--content-width)
-      minmax(0, var(--gutter-max));
-    justify-content: center;
+      minmax(0, 1fr);
+    column-gap: var(--layout-gap);
     align-items: start;
+    /* The band including its gutter, not the content box inside it: the grid
+       carries no side padding below this breakpoint, so without the gutter
+       here the rails ran 20px past the header on any viewport narrower than
+       the full 1320. */
+    max-width: var(--page-width);
+    padding: 0 var(--page-gutter);
+    margin: 0 auto;
   }
 
   .post-layout .post {
     grid-column: 2;
+  }
+}
+
+/* --- the left rail -------------------------------------------------------- */
+
+.post-rail {
+  display: none;
+}
+
+@media (min-width: 1260px) {
+  .post-rail {
+    display: flex;
+    grid-column: 1;
+    /* Overrides the grid's `align-items: start`. The rail has to span the
+       article's full height or its sticky child has no distance to travel. */
+    align-self: stretch;
+    flex-direction: column;
+    /* The buttons sit at the END of the rail in flow. Sticky only ever pulls a
+       box back toward the viewport, never pushes one further down it, so a
+       box parked at the top of the rail with `bottom` set would just scroll
+       away like anything else. From the bottom, `bottom` lifts them to above
+       the fold for the whole scroll and lets them come to rest at the end of
+       the article. */
+    justify-content: flex-end;
+    /* Against the article side of the rail rather than adrift in the middle of
+       it, so the buttons sit a gap's width from the text they belong to. */
+    align-items: flex-end;
   }
 }
 
@@ -186,7 +261,7 @@
   }
 }
 
-@media (min-width: 1360px) {
+@media (min-width: 1260px) {
   .table-of-contents {
     order: 0;
     grid-column: 3;
@@ -247,7 +322,7 @@
   transform: rotate(180deg);
 }
 
-@media (min-width: 1360px) {
+@media (min-width: 1260px) {
   /* The rail has room to stay open, so the label goes back to being a label.
      Selector must mirror the collapsed rule above — `:not(:checked)` carries
      extra specificity that a plainer selector here would lose to. */
@@ -313,17 +388,6 @@
   margin-top: 40px;
 }
 
-/* The previous profile picture was a circular PNG cut-out; the replacement is a
-   plain photograph, so the circle is applied here. It is written as a plain
-   markdown image (which is what routes it through astro:assets), so it is
-   addressed by position rather than by a class. */
-.page-about .post-content > p:first-of-type img {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
 /* ---------------------------------------------------------------------------
    List view
 
@@ -335,14 +399,176 @@
    one screen instead of scrolling three times.
    --------------------------------------------------------------------------- */
 
-.post.on-list {
-  padding: 28px 20px;
+/* The cards used to each carry the article's own width. A grid of two wants
+   more room than a single column of prose does, so the list fills the page
+   band that the header and footer already sit in — see --page-width in
+   variables.css. */
+:root {
+  /* Wide enough that the rule down the middle has air on both sides instead of
+     reading as a hairline crammed between two blocks of text. */
+  --grid-gap: 56px;
+}
+
+.posts {
+  width: 100%;
+  max-width: var(--page-width);
   margin: 0 auto;
+  padding: 0 var(--page-gutter) 20px;
+}
+
+/* Everything below the lead card runs two abreast. On a phone that would leave
+   a ~170px track, which breaks a Korean title every two or three syllables, so
+   the grid starts as a single column and only splits once there is room. */
+.posts__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--grid-gap);
+}
+
+@media (min-width: 685px) {
+  .posts__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.post.on-list {
+  max-width: none;
+  padding: 30px 0;
+  margin: 0;
 }
 
 @media (max-width: 684px) {
   .post.on-list {
-    padding: 22px 16px;
+    padding: 24px 0;
+  }
+}
+
+/* --- dividers ------------------------------------------------------------- */
+
+/* The dash pattern is --rule-dash / --rule-period, declared in variables.css
+   because <hr> uses it too — a break between two posts and a break between two
+   About sections are the same mark and have to be drawn the same way. */
+.on-list.post--featured,
+.posts__grid .post.on-list {
+  background-image: var(--rule-h);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: left bottom;
+}
+
+/* Nothing follows the bottom row, so it needs no rule under it. In two columns
+   that row is the last card plus — when the count is even — the one before it,
+   which is the second-to-last card sitting in the left-hand track. */
+.posts__grid .post.on-list:last-child {
+  background-image: none;
+}
+
+@media (min-width: 685px) {
+  .posts__grid .post.on-list:nth-last-child(2):nth-child(odd) {
+    background-image: none;
+  }
+
+  /* The rule down the gutter, drawn from the left-hand card so it lands on the
+     centre line of the gap. A left-hand card with no neighbour — an odd number
+     of posts, so the last one sits alone — has nothing to divide from. */
+  .posts__grid .post.on-list {
+    position: relative;
+  }
+
+  .posts__grid .post.on-list:nth-child(odd):not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: calc(var(--grid-gap) / -2);
+    width: 1px;
+    background-image: var(--rule-v);
+  }
+}
+
+/* --- the lead card -------------------------------------------------------- */
+
+/* The newest post takes the full column at close to article scale, so the page
+   opens on one thing to read rather than on a list to triage. */
+.on-list.post--featured {
+  padding-bottom: 36px;
+}
+
+.on-list.post--featured .post-title {
+  font-size: 2rem;
+}
+
+@media (max-width: 684px) {
+  .on-list.post--featured .post-title {
+    font-size: 1.5rem;
+  }
+}
+
+.on-list.post--featured .post-summary {
+  font-size: 1rem;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* The card is full width; its text is not. Run across the whole band and a
+   Korean line reaches ~75 characters, well past the 20-40 the guidance calls
+   comfortable, so the title and summary keep the article's own measure — the
+   same number, so a headline reads at one width across the whole site. */
+.on-list.post--featured .post-title,
+.on-list.post--featured .post-summary {
+  max-width: var(--content-width);
+}
+
+/* Only the lead card carries a picture, and only when the post declares a
+   cover — at two columns a thumbnail shrinks to decoration and pushes the
+   titles off the first screen. The ratio is fixed so a cover of any size
+   reserves the same space and nothing shifts as it decodes, and it is the
+   1200x630 the schema asks covers to be, so a correctly sized one is not
+   cropped. */
+.post-thumb {
+  display: block;
+  margin: 0 0 22px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--background-secondary);
+}
+
+.post-thumb img {
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+  object-fit: cover;
+}
+
+/* Words on the left, picture on the right. Stacked, the card would run most of
+   a screen tall before the second post appeared; side by side the whole lead
+   and the first row of the grid fit above the fold. `order` rather than DOM
+   order, so the picture still comes first on a phone, where it stacks back on
+   top and the row rules do not apply. */
+@media (min-width: 685px) {
+  .on-list.post--featured:has(.post-thumb) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 440px);
+    column-gap: 48px;
+    align-items: center;
+  }
+
+  .post--featured .post-card__body {
+    order: 1;
+  }
+
+  .post--featured .post-thumb {
+    order: 2;
+    margin: 0;
+  }
+}
+
+/* --- grid cards ----------------------------------------------------------- */
+
+/* A 360px track takes a smaller title than the full-width list did; the phone
+   size below already sits where it needs to. */
+@media (min-width: 685px) {
+  .posts__grid .post-title {
+    font-size: 1.375rem;
   }
 }
 
@@ -374,21 +600,11 @@
   text-underline-offset: 0.18em;
 }
 
-/* Tags join the meta row, so none of the block layout the article page gives
-   them applies here. */
+/* Tags sit under the summary rather than in the meta row. Above the title they
+   competed with the date for the first thing read, and a card is scanned by
+   when and what before it is scanned by which subject. */
 .on-list .post-tags {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0;
-  font-size: inherit;
-  opacity: 1;
-}
-
-.on-list .post-tags a:hover,
-.on-list .post-tags a:focus-visible {
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+  margin: 14px 0 0;
 }
 
 .on-list .post-summary {
@@ -403,4 +619,78 @@
   -webkit-line-clamp: 2;
   line-clamp: 2;
   overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   Share buttons
+
+   Sticky against the bottom of the viewport, from a flow position at the end
+   of the rail — see .post-rail for why that way round. They float just above
+   the fold for the length of the article and settle at its end.
+   --------------------------------------------------------------------------- */
+
+.post-actions {
+  position: sticky;
+  bottom: 40px;
+  /* Side by side: two 40px circles and the gap come to 90px, well inside the
+     210px rail, and a row reads as one control rather than as a stack the eye
+     has to walk down. */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Matches `bottom`, so the gap under the buttons does not change as they
+     stop being stuck and settle at the end of the rail. */
+  margin-bottom: 40px;
+}
+
+/* Resets the global `button` rule in buttons.css, which is written for the
+   pill-shaped pagination buttons. */
+.post-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  background: var(--background);
+  color: var(--color-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.post-action:hover,
+.post-action:focus-visible {
+  color: var(--color-strong);
+  border-color: var(--color-secondary);
+}
+
+.post-action svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* The copy button holds both glyphs and swaps which one is shown — no markup
+   is created or destroyed, so the button cannot resize as it changes. */
+.post-action__icon--check {
+  display: none;
+}
+
+.post-action.is-copied {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.post-action.is-copied .post-action__icon--link {
+  display: none;
+}
+
+.post-action.is-copied .post-action__icon--check {
+  display: block;
 }

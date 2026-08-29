@@ -1,0 +1,239 @@
+/* ---------------------------------------------------------------------------
+   About
+
+   The page uses the index's furniture rather than an article's: the same page
+   band, the same dashed rule between blocks, the same rule down the gutter of
+   a two-column row. Its sections are short blocks of facts, not prose, so
+   running them one under another down 1140px left the page mostly empty on the
+   right and twice as tall as it needed to be.
+   --------------------------------------------------------------------------- */
+
+.about {
+  width: 100%;
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 var(--page-gutter) 20px;
+}
+
+/* Every block after the lead opens with a rule, with the same air above it as
+   below. The lead has nothing before it, so it gets neither. */
+.about > * + * {
+  margin-top: 44px;
+  padding-top: 44px;
+  background-image: var(--rule-h);
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: left top;
+}
+
+@media (max-width: 684px) {
+  .about > * + * {
+    margin-top: 32px;
+    padding-top: 32px;
+  }
+}
+
+/* --- lead ----------------------------------------------------------------- */
+
+.about__lead {
+  padding-top: 28px;
+}
+
+.about__portrait {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: 24px;
+}
+
+.about__tagline {
+  margin: 16px 0 0;
+  font-size: 1.0625rem;
+  color: var(--color-strong);
+}
+
+/* --- two-column rows ------------------------------------------------------ */
+
+.about__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--grid-gap);
+}
+
+/* Stacked, the two sections of a row are divided the way every other pair of
+   blocks on the page is — the gutter rule has nowhere to go at one column. */
+@media (max-width: 684px) {
+  .about__row > .about__section + .about__section {
+    margin-top: 32px;
+    padding-top: 32px;
+    background-image: var(--rule-h);
+    background-repeat: no-repeat;
+    background-size: 100% 1px;
+    background-position: left top;
+  }
+}
+
+@media (min-width: 685px) {
+  .about__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .about__section {
+    position: relative;
+  }
+
+  /* The rule down the gutter, drawn from the left-hand section so it lands on
+     the centre line of the gap — the same mark the index grid uses. */
+  .about__row > .about__section:first-child::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: calc(var(--grid-gap) / -2);
+    width: 1px;
+    background-image: var(--rule-v);
+  }
+}
+
+/* Matches the index's card titles: these label a short block of facts rather
+   than open a chapter. */
+.about__section h2 {
+  margin: 0 0 16px;
+  font-size: 1.375rem;
+  color: var(--color-strong);
+}
+
+@media (max-width: 684px) {
+  .about__section h2 {
+    font-size: 1.1875rem;
+  }
+}
+
+.about a {
+  color: inherit;
+}
+
+/* --- label / value pairs (Contact, Channel) ------------------------------- */
+
+/* A fixed label column keeps "Email" and "LinkedIn" on one edge and their
+   values on another, which the old `**Email** :` line could not do. It falls
+   back to stacked rows on a phone, where 88px of label leaves too little for a
+   URL that cannot be broken. */
+.about__pairs {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 8px 12px;
+  margin: 0;
+}
+
+.about__pairs dt {
+  font-weight: 700;
+  color: var(--color-strong);
+}
+
+.about__pairs dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 684px) {
+  .about__pairs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .about__pairs dd:not(:last-child) {
+    margin-bottom: 12px;
+  }
+}
+
+/* --- dated entries (Career, Presentations, Awards) ------------------------ */
+
+/* The dates set in tabular figures, in a column of their own, so a career or a
+   talk list can be scanned by when — the same reason the index puts the date
+   above the title rather than after it. */
+.about__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.about__list li {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 4px 14px;
+}
+
+.about__list li + li {
+  margin-top: 12px;
+}
+
+.about__when {
+  color: var(--color-secondary);
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  /* Optically level with the first line of the value beside it, which is set a
+     step larger. */
+  padding-top: 2px;
+}
+
+.about__what {
+  min-width: 0;
+  color: var(--color-strong);
+}
+
+.about__what a {
+  font-weight: 700;
+}
+
+@media (max-width: 684px) {
+  .about__list li {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+
+  .about__when {
+    padding-top: 0;
+  }
+}
+
+/* A talk is the point of its entry, so it gets its own line under the venue
+   rather than trailing off the end of one. */
+.about__talk {
+  display: block;
+  margin-top: 2px;
+}
+
+.about__notes {
+  display: block;
+  margin-top: 4px;
+  color: var(--color);
+  font-size: 0.9375rem;
+}
+
+.about__note {
+  display: block;
+}
+
+.about__note::before {
+  content: "· ";
+  color: var(--color-secondary);
+}
+
+/* Seven awards down the full band would add a screen and a half to the page,
+   so they take the same two tracks as the sections above them. */
+@media (min-width: 685px) {
+  .about__list--split {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    row-gap: 20px;
+  }
+
+  .about__list--split li + li {
+    margin-top: 0;
+  }
+}

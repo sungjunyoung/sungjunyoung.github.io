@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  light: ImageMetadata;
+  /** Optional twin drawn on the dark theme's own ground. */
+  dark?: ImageMetadata;
+  alt: string;
+  widths: number[];
+  sizes: string;
+  loading?: 'eager' | 'lazy';
+}
+
+const { light, dark, alt, widths, sizes, loading = 'lazy' } = Astro.props;
+---
+
+{/* Both plates ship and CSS picks one. <picture> with prefers-color-scheme
+    cannot be used: the theme here is a class the reader toggles, which a media
+    query does not see, and the swap has to happen without a reload. They are
+    ~18kB each, which is the price of the toggle working. */}
+<span class:list={['cover', dark && 'cover--themed']}>
+  <Image
+    class="cover__plate cover__plate--light"
+    src={light}
+    alt={alt}
+    widths={widths}
+    sizes={sizes}
+    loading={loading}
+  />
+  {dark && (
+    <Image
+      class="cover__plate cover__plate--dark"
+      src={dark}
+      alt={alt}
+      widths={widths}
+      sizes={sizes}
+      loading={loading}
+    />
+  )}
+</span>

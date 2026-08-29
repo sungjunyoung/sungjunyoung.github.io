@@ -405,11 +405,12 @@ ol ol {
   }
 }
 
+/* Same mark as the rule between two posts on the index — see --rule-dash. */
 hr {
   width: 100%;
   border: none;
-  background: var(--border-color);
   height: 1px;
+  background-image: var(--rule-h);
 }
 
 .hidden {

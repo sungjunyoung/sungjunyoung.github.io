@@ -1,22 +1,23 @@
 .footer {
-  padding: 40px 20px;
+  padding: 40px var(--page-gutter);
   flex-grow: 0;
   color: var(--color-secondary);
 }
 
+/* The same band as .header__inner — see header.css. */
 .footer__inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin: 0 auto;
-  width: 760px;
+  width: calc(var(--page-width) - 2 * var(--page-gutter));
   max-width: 100%;
 }
 
+/* The logo and the two credit lines stop fitting on one row well before the
+   band itself runs out of room. */
 @media (max-width: 900px) {
   .footer__inner {
-    /* Same 620px cap as .header__inner, to stay aligned with the article. */
-    width: 620px;
     flex-direction: column;
   }
 }

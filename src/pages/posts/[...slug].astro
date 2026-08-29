@@ -5,6 +5,8 @@ import Base from '../../layouts/Base.astro';
 import TableOfContents from '../../components/TableOfContents.astro';
 import Comments from '../../components/Comments.astro';
 import ReadingTime from '../../components/ReadingTime.astro';
+import PostActions from '../../components/PostActions.astro';
+import Cover from '../../components/Cover.astro';
 import { getPosts, postUrl, type Post } from '../../utils/posts';
 import { excerpt } from '../../utils/excerpt';
 import { readingMinutes } from '../../utils/readingTime';
@@ -44,6 +46,10 @@ const description = post.data.description ?? excerpt(post.body ?? '');
   image={post.data.cover}
 >
   <div class="post-layout">
+    <div class="post-rail">
+      <PostActions />
+    </div>
+
     <article class="post">
       <h1 class="post-title">{post.data.title}</h1>
       <div class="post-meta">
@@ -54,11 +60,22 @@ const description = post.data.description ?? excerpt(post.body ?? '');
       </div>
 
       {post.data.tags.length > 0 && (
-        <span class="post-tags">
-          {post.data.tags.map((tag) => (
-            <Fragment><a href={`/tags/${tag}/`}>#{tag}</a>&nbsp;</Fragment>
-          ))}
-        </span>
+        <div class="post-tags">
+          {post.data.tags.map((tag) => <a href={`/tags/${tag}/`}>#{tag}</a>)}
+        </div>
+      )}
+
+      {post.data.cover && (
+        <div class="post-cover">
+          <Cover
+            light={post.data.cover}
+            dark={post.data.coverDark}
+            alt={post.data.title}
+            widths={[760, 1200]}
+            sizes="(max-width: 900px) 100vw, 760px"
+            loading="eager"
+          />
+        </div>
       )}
 
       <div class="post-content">
