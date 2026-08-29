@@ -17,6 +17,9 @@ const posts = defineCollection({
       toc: z.boolean().default(true),
       /** Optional social card for this post, ideally 1200x630. */
       cover: image().optional(),
+      /** The same plate drawn on the dark theme's ground. Optional: a
+          photograph needs no twin, a diagram or a wordmark does. */
+      coverDark: image().optional(),
     }),
 });
 

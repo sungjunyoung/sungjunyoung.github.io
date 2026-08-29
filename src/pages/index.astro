@@ -9,20 +9,42 @@ import { SITE, LABELS } from '../consts';
 const posts = await getPosts();
 const page = posts.slice(0, SITE.postsPerPage);
 const hasNext = posts.length > SITE.postsPerPage;
+
+// The newest post gets the whole first row to itself; everything after it runs
+// two to a row on desktop and one on a phone.
+const [lead, ...rest] = page;
 ---
 
 <Base title={SITE.title}>
   <div class="posts">
-    {page.map((post) => (
+    {lead && (
       <PostCard
-        href={postUrl(post)}
-        title={post.data.title}
-        date={post.data.date}
-        tags={post.data.tags}
-        minutes={readingMinutes(post.body ?? '')}
-        summary={post.data.description ?? excerpt(post.body ?? '')}
+        featured
+        cover={lead.data.cover}
+        coverDark={lead.data.coverDark}
+        href={postUrl(lead)}
+        title={lead.data.title}
+        date={lead.data.date}
+        tags={lead.data.tags}
+        minutes={readingMinutes(lead.body ?? '')}
+        summary={lead.data.description ?? excerpt(lead.body ?? '')}
       />
-    ))}
+    )}
+
+    {rest.length > 0 && (
+      <div class="posts__grid">
+        {rest.map((post) => (
+          <PostCard
+            href={postUrl(post)}
+            title={post.data.title}
+            date={post.data.date}
+            tags={post.data.tags}
+            minutes={readingMinutes(post.body ?? '')}
+            summary={post.data.description ?? excerpt(post.body ?? '')}
+          />
+        ))}
+      </div>
+    )}
 
     <div class="pagination">
       <div class="pagination__buttons">

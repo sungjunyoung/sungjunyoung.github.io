@@ -11,11 +11,7 @@
 /** Images the reader can already do something else with are left alone. */
 function isZoomable(image: HTMLImageElement): boolean {
   // A linked image belongs to its link.
-  if (image.closest("a")) return false;
-  // The about page's profile photo is a 200px circular crop; there is nothing
-  // to enlarge, and the round mask makes the zoom affordance look like a bug.
-  if (image.closest(".page-about")) return false;
-  return true;
+  return !image.closest("a");
 }
 
 export function initLightbox(signal: AbortSignal) {

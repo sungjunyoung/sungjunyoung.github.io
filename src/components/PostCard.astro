@@ -1,4 +1,5 @@
 ---
+import Cover from './Cover.astro';
 import ReadingTime from './ReadingTime.astro';
 import { formatDate } from '../consts';
 
@@ -9,28 +10,63 @@ interface Props {
   minutes: number;
   tags: readonly string[];
   summary: string;
+  /** The newest post on an index leads the page on its own row, at article size. */
+  featured?: boolean;
+  /** Shown on the featured card only, and only when the post declares one. */
+  cover?: ImageMetadata;
+  coverDark?: ImageMetadata;
 }
 
-const { href, title, date, minutes, tags, summary } = Astro.props;
+const {
+  href,
+  title,
+  date,
+  minutes,
+  tags,
+  summary,
+  featured = false,
+  cover,
+  coverDark,
+} = Astro.props;
 ---
 
-<article class="post on-list">
-  {/* Date, reading time and tags read as one line above the title: the dates
-      set in tabular figures line up down the left edge of the list, so the
-      index can be scanned by when rather than only by what. */}
-  <div class="post-meta">
-    <time class="post-date" datetime={date.toISOString()}>{formatDate(date)}</time>
-    <ReadingTime minutes={minutes} />
+<article class:list={['post', 'on-list', featured && 'post--featured']}>
+  {/* The lead card is the one place a picture earns its keep: below it the grid
+      runs two abreast, where thumbnails would shrink to decoration and push the
+      titles off the first screen. The link is hidden from assistive tech
+      because the title beside it is the same destination. */}
+  {featured && cover && (
+    <a class="post-thumb" href={href} tabindex="-1" aria-hidden="true">
+      <Cover
+        light={cover}
+        dark={coverDark}
+        alt=""
+        widths={[440, 880]}
+        sizes="(max-width: 684px) 100vw, 440px"
+        loading="eager"
+      />
+    </a>
+  )}
+
+  <div class="post-card__body">
+    {/* Date, reading time and tags read as one line above the title: the dates
+        set in tabular figures line up down the left edge of the list, so the
+        index can be scanned by when rather than only by what. */}
+    <div class="post-meta">
+      <time class="post-date" datetime={date.toISOString()}>{formatDate(date)}</time>
+      <ReadingTime minutes={minutes} />
+    </div>
+
+    <h2 class="post-title">
+      <a href={href}>{title}</a>
+    </h2>
+
+    <p class="post-summary">{summary}</p>
+
     {tags.length > 0 && (
-      <span class="post-tags">
+      <div class="post-tags">
         {tags.map((tag) => <a href={`/tags/${tag}/`}>#{tag}</a>)}
-      </span>
+      </div>
     )}
   </div>
-
-  <h2 class="post-title">
-    <a href={href}>{title}</a>
-  </h2>
-
-  <p class="post-summary">{summary}</p>
 </article>

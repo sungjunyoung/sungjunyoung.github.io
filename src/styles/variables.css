@@ -8,6 +8,7 @@ body.light-theme,
   --color-strong: #000;
   --color-secondary: #737380;
   --border-color: #dcdcdc;
+  --rule-color: rgba(0, 0, 0, 0.12);
   --selection: rgba(254, 81, 134, 0.25);
   --selection-color: #222;
 
@@ -15,9 +16,29 @@ body.light-theme,
      inherited by the dark blocks below. */
   --accent: #fe5186;
 
-  /* variables for js, must be the same as these in the media queries below */
-  --phoneWidth: (max-width: 684px);
-  --tabletWidth: (max-width: 900px);
+  /* The band the header, the footer and the post list all sit in. It is wider
+     than an article's own --content-width on purpose: a two-column index needs
+     the room, and a page reads as one thing only if the logo, the first card
+     and the copyright all start at the same x. One token, so the header cannot
+     end up a different width on the index than it is on a post. */
+  --page-width: 1320px;
+  --page-gutter: 20px;
+
+  /* Every horizontal rule on the site — between two posts, down the gutter of
+     the index grid, and every `---` in a Markdown source — is drawn from this
+     one dash pattern. `border-style: dashed` cannot say how long a dash is or
+     how far apart they sit; at 1px it draws a 2-on-2-off stipple that reads as
+     a solid line that failed to render, so the rules are painted as a
+     repeating gradient instead, which does take those two numbers. */
+  --rule-dash: 7px;
+  --rule-gap: 7px;
+  --rule-period: 14px; /* --rule-dash + --rule-gap */
+}
+
+@media (max-width: 684px) {
+  :root {
+    --page-gutter: 16px;
+  }
 }
 
 body.dark-theme {
@@ -29,6 +50,7 @@ body.dark-theme {
   --color-strong: #e6e6ec;
   --color-secondary: #909099;
   --border-color: #4a4b50;
+  --rule-color: rgba(255, 255, 255, 0.13);
   --selection: rgba(254, 81, 134, 0.38);
   --selection-color: #f4f4f8;
 }
@@ -42,6 +64,7 @@ body.dark-theme {
     --color-strong: #000;
     --color-secondary: #737380;
     --border-color: #dcdcdc;
+    --rule-color: rgba(0, 0, 0, 0.12);
     --selection: rgba(254, 81, 134, 0.25);
     --selection-color: #222;
   }
@@ -56,7 +79,31 @@ body.dark-theme {
     --color-strong: #e6e6ec;
     --color-secondary: #909099;
     --border-color: #4a4b50;
+    --rule-color: rgba(255, 255, 255, 0.13);
     --selection: rgba(254, 81, 134, 0.38);
     --selection-color: #f4f4f8;
   }
+}
+
+/* The dashed rule itself, so drawing one is a single declaration wherever it
+   happens — between two posts, down the gutter of the index grid, between two
+   About sections, and for every `---` in a Markdown source.
+
+   It has to be declared on `body` rather than on `:root`. A var() nested inside
+   a custom property is substituted against the element the property is declared
+   on, not the element that later uses it — and --rule-color is set per theme on
+   `body`. Declared on :root, the gradient would bake in :root's light value and
+   every rule in the dark theme would be painted black on a dark ground, which
+   is to say invisible. */
+body {
+  --rule-h: repeating-linear-gradient(
+    to right,
+    var(--rule-color) 0 var(--rule-dash),
+    transparent var(--rule-dash) var(--rule-period)
+  );
+  --rule-v: repeating-linear-gradient(
+    to bottom,
+    var(--rule-color) 0 var(--rule-dash),
+    transparent var(--rule-dash) var(--rule-period)
+  );
 }
