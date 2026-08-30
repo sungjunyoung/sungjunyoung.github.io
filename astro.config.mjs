@@ -6,6 +6,10 @@ import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
 import { gemojiPlugin } from "./src/markdown/gemoji";
 import { figuresPlugin } from "./src/markdown/figures";
+import {
+  themedImagesMdastPlugin,
+  themedImagesPlugin,
+} from "./src/markdown/themed-images";
 import { calloutsPlugin } from "./src/markdown/callouts";
 
 const SITE_URL = "https://blog.sungjunyoung.dev";
@@ -86,8 +90,8 @@ export default defineConfig({
           },
         },
       },
-      mdastPlugins: [gemojiPlugin, calloutsPlugin],
-      hastPlugins: [figuresPlugin],
+      mdastPlugins: [gemojiPlugin, calloutsPlugin, themedImagesMdastPlugin],
+      hastPlugins: [themedImagesPlugin, figuresPlugin],
     }),
   },
 });

@@ -18,7 +18,17 @@ export const figuresPlugin: HastPluginDefinition = {
       );
       if (children.length !== 1) return;
 
-      const image = children[0];
+      const content = children[0];
+      if (!content || content.type !== "element") return;
+
+      // A themed figure has already been folded into a <span> holding both
+      // plates, so the caption is on the light one inside it.
+      const themed = content.tagName === "span";
+      const image = themed
+        ? (content.children ?? []).find(
+            (child) => child.type === "element" && child.tagName === "img",
+          )
+        : content;
       if (!image || image.type !== "element" || image.tagName !== "img") return;
 
       const caption = image.properties?.title;
@@ -28,6 +38,10 @@ export const figuresPlugin: HastPluginDefinition = {
       // leaves an empty attribute behind. Astro's image handling runs after
       // this plugin and still picks the element up.
       const { title: _caption, ...properties } = image.properties ?? {};
+      const figureContent = themed
+        ? { ...content, children: (content.children ?? []).map((child) =>
+            child === image ? { ...image, properties } : child) }
+        : { type: "element" as const, tagName: "img", properties, children: [] };
 
       ctx.replaceNode(node, {
         type: "element",
@@ -36,7 +50,7 @@ export const figuresPlugin: HastPluginDefinition = {
         // with a centred caption.
         properties: { className: ["left"] },
         children: [
-          { type: "element", tagName: "img", properties, children: [] },
+          figureContent,
           {
             type: "element",
             tagName: "figcaption",
