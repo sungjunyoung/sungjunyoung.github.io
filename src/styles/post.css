@@ -694,3 +694,26 @@ body.dark-theme .cover--themed .cover__plate--dark {
 .post-action.is-copied .post-action__icon--check {
   display: block;
 }
+
+/* ---------------------------------------------------------------------------
+   Themed body plates
+
+   A diagram drawn in black ink stays black when the page turns dark, so a post
+   can ship two plates of the same figure and let CSS pick one. Same trick as
+   the cover above, and for the same reason: the theme is a class the reader
+   toggles, which `prefers-color-scheme` cannot see and could not swap without
+   a reload. Both plates are in the page — the second one's bytes are the price
+   of the toggle working.
+   --------------------------------------------------------------------------- */
+
+.plate--themed img:last-child {
+  display: none;
+}
+
+body.dark-theme .plate--themed img:first-child {
+  display: none;
+}
+
+body.dark-theme .plate--themed img:last-child {
+  display: block;
+}

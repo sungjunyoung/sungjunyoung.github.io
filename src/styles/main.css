@@ -339,23 +339,61 @@ blockquote p:last-of-type {
   margin-bottom: 0;
 }
 
+/* `border-collapse: collapse` merges each cell's border into a shared edge,
+   and a shared edge cannot be rounded — the radius here was inert. Separating
+   the borders lets the outer rule live on the table itself, where it can take
+   a corner, and leaves each cell drawing only the two rules it owns. */
 table {
   table-layout: fixed;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   width: 100%;
   margin: 40px 0;
-  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
 }
 
-table,
+/* An unqualified `border: 1px solid` falls back to `currentColor`, which in
+   body copy is the text ink — the grid ended up as dark as the words inside
+   it. The rules belong on the same faint line every other divider uses. */
 th,
 td {
-  border: 1px solid;
+  border-right: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   padding: 10px;
+}
+
+/* The table's own border already draws the last column and row. */
+th:last-child,
+td:last-child {
+  border-right: 0;
+}
+
+tr:last-child td {
+  border-bottom: 0;
 }
 
 th {
   background: var(--background-secondary);
+}
+
+/* The corner cells are inset by the table's 1px rule, so they round a hair
+   tighter than it does — otherwise the header's fill squares off the top two
+   corners and shows through the curve. */
+thead tr:first-child th:first-child {
+  border-top-left-radius: 7px;
+}
+
+thead tr:first-child th:last-child {
+  border-top-right-radius: 7px;
+}
+
+tr:last-child td:first-child {
+  border-bottom-left-radius: 7px;
+}
+
+tr:last-child td:last-child {
+  border-bottom-right-radius: 7px;
 }
 
 ul,
