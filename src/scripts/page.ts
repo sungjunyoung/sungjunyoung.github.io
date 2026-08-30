@@ -17,6 +17,7 @@ import { initHeadingAnchors } from "./heading-anchors";
 import { initToc } from "./toc";
 import { initReadingProgress } from "./reading-progress";
 import { initLightbox } from "./lightbox";
+import { initTableScroll } from "./table-scroll";
 import { initComments } from "./comments";
 import "./mixpanel";
 
@@ -39,6 +40,7 @@ const INITS: PageInit[] = [
   initToc,
   initReadingProgress,
   initLightbox,
+  initTableScroll,
   initComments,
 ];
 

@@ -11,6 +11,7 @@ import {
   themedImagesPlugin,
 } from "./src/markdown/themed-images";
 import { calloutsPlugin } from "./src/markdown/callouts";
+import { tablesPlugin } from "./src/markdown/tables";
 
 const SITE_URL = "https://blog.sungjunyoung.dev";
 const POSTS_DIR = new URL("./src/content/posts/", import.meta.url);
@@ -91,7 +92,7 @@ export default defineConfig({
         },
       },
       mdastPlugins: [gemojiPlugin, calloutsPlugin, themedImagesMdastPlugin],
-      hastPlugins: [themedImagesPlugin, figuresPlugin],
+      hastPlugins: [themedImagesPlugin, figuresPlugin, tablesPlugin],
     }),
   },
 });
