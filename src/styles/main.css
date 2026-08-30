@@ -339,6 +339,73 @@ blockquote p:last-of-type {
   margin-bottom: 0;
 }
 
+/* Every markdown table is wrapped in this by the tables plugin. A table is
+   the one block whose width is set by its content rather than by the column it
+   sits in, so on a phone it gets its own horizontal scroll rather than being
+   squeezed — see src/markdown/tables.ts for why the scroll lives on a wrapper
+   and not on the table itself. */
+.table-scroll {
+  overflow-x: auto;
+  /* A swipe that runs past the last column must stay in the table instead of
+     turning into the browser's back gesture. */
+  overscroll-behavior-x: contain;
+  margin: 40px 0;
+}
+
+/* The wrapper carries the block's spacing; two sets would stack. */
+.table-scroll table {
+  margin: 0;
+}
+
+/* Only set when the table really does overflow, so a table that fits is not an
+   extra stop in the tab order. */
+.table-scroll[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Nothing about a cut-off column says "there is more to the right" — the table
+   ends at the edge of the screen the same way it would if it fitted. Fading
+   the overflowing edge is the hint, and it is set from the scroll position so
+   it points the way that is actually left to go. The mask sits on the visible
+   box, not on the content, so it stays at the edge as the table moves under
+   it. */
+.table-scroll[data-overflow="end"] {
+  -webkit-mask-image: linear-gradient(to left, transparent, #000 28px);
+  mask-image: linear-gradient(to left, transparent, #000 28px);
+}
+
+.table-scroll[data-overflow="start"] {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 28px);
+  mask-image: linear-gradient(to right, transparent, #000 28px);
+}
+
+.table-scroll[data-overflow="both"] {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 28px,
+    #000 calc(100% - 28px),
+    transparent
+  );
+}
+
+/* An outline is painted outside the border box, where the edge fade above
+   would eat the ends of it — the one ring a keyboard user has to find must not
+   be the thing that gets faded out. Placed after the fade rules, and matched
+   on the same attribute, so it actually wins over them. */
+.table-scroll[data-overflow]:focus-visible {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
 /* `border-collapse: collapse` merges each cell's border into a shared edge,
    and a shared edge cannot be rounded — the radius here was inert. Separating
    the borders lets the outer rule live on the table itself, where it can take
@@ -351,6 +418,32 @@ table {
   margin: 40px 0;
   border: 1px solid var(--border-color);
   border-radius: 8px;
+}
+
+/* On a phone the fixed algorithm is the problem it solves on a desktop: it
+   splits 361px between six columns whatever they hold, and every cell wraps
+   down to two or three characters a line. Letting the columns take the width
+   they need — never less than the column the table sits in — trades a table
+   that fits and cannot be read for one that reads and scrolls. `max-content`
+   rather than `auto` because auto still shrinks columns to avoid the overflow
+   that is the whole point here.
+
+   Cells stop wrapping with it: a figure or a date range is a single value and
+   breaking one across lines is what made the table unreadable in the first
+   place. A cell holding a sentence would stretch the table a long way to the
+   right, so tables here stay what the posts use them for — grids of values,
+   with prose in the paragraph above. */
+@media (max-width: 684px) {
+  .table-scroll table {
+    table-layout: auto;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .table-scroll th,
+  .table-scroll td {
+    white-space: nowrap;
+  }
 }
 
 /* An unqualified `border: 1px solid` falls back to `currentColor`, which in
