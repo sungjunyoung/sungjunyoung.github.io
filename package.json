@@ -16,7 +16,7 @@
     "@astrojs/markdown-satteri": "^0.3.7",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
-    "astro": "^7.2.4",
+    "astro": "^7.2.8",
     "gemoji": "^8.1.0",
     "mixpanel-browser": "2.82.1",
     "satteri": "^0.10.5",
